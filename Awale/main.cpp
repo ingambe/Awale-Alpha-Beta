@@ -7,7 +7,7 @@
 //
 #define LOG_MAX_CAILLOUX 8
 #define LOG_MAX_CAILLOUX_MAIN 6
-#define NB_CASES 6
+#define NB_CASES 10
 #include <iostream>
 #include <bitset>
 #include <stdio.h>
@@ -240,12 +240,15 @@ void initGame(Position *courant) {
 int main(int argc, const char * argv[]) {
 	Position position;
 	Position positionSuivante;
-	bool ordi_joue = true;
+    int choix_debut;
+    std::cout << "L'ordinateur commence ? (0 pour Oui, 1 pour Non) : ";
+    std::cin >> choix_debut;
+    bool ordi_joue = (choix_debut == 0);
 	initGame(&position);
 	int coup = 0;
 	while (!positionFinale(&position, ordi_joue)) {
 		if (ordi_joue) {
-			coup = prochain_coup(&position, 3);
+			coup = prochain_coup(&position, 5);
             std::cout << "L'ordinateur a joue : "<< coup << std::endl;
 		}
 		else {
@@ -253,12 +256,13 @@ int main(int argc, const char * argv[]) {
 			std::cin >> coup;
 		}
         if(!coupValide(&position, coup, ordi_joue)){
-            std::cout << "le coup : " << coup << "est non valide il a ete jouee par " << (ordi_joue ? "l'ordinateur" : "l'adversaire") << std::endl;
+            std::cout << "le coup : " << coup << " est non valide il a ete jouee par " << (ordi_joue ? "l'ordinateur" : "l'adversaire") << std::endl;
+            return 0;
         }
 		jouerCoup(&positionSuivante, &position, coup, ordi_joue);
 		position = positionSuivante;
 		afficherJeux(&position);
-		ordi_joue = ordi_joue ? false : true;
+        ordi_joue = !ordi_joue;
 		//afficherJeux(&positionSuivante);
 	}
 	return 0;
