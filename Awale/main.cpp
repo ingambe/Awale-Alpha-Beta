@@ -87,12 +87,93 @@ void jouerCoup(Position* suivant, Position* courante, int i, bool ordi_joueur1){
     memcpy(suivant, courante, sizeof(Position));
     // d'abord on deplace les cailloux
     if(courante->ordi_joue){
+        // permet de savoir dans quelle cotee on est
+        bool cotee_ordi = true;
         suivant->cases_ordi[i].case_joueur = 0;
         for(int j = courante->cases_ordi[i].case_joueur;  j >= 1; j--){
-            
+            // si on change de cotee
+            if((i + 1) == 5){
+                i = 0;
+                cotee_ordi = !cotee_ordi;
+            } else if((i - 1) == -1){
+                i = 4;
+                cotee_ordi = !cotee_ordi;
+            } else {
+                // sinon on incremente juste si on est dans notre cotee
+                // sinon on decremente
+                if(cotee_ordi){
+                    i++;
+                } else {
+                    i--;
+                }
+            }
+            if(cotee_ordi){
+                suivant->cases_ordi[i].case_joueur++;
+            } else {
+                suivant->cases_joueur[i].case_joueur++;
+            }
+        }
+        int nb_cailloux_case_fin;
+        // si on fini cotee ordi
+        if(cotee_ordi){
+            nb_cailloux_case_fin = suivant->cases_ordi[i].case_joueur;
+        } else {
+            nb_cailloux_case_fin = suivant->cases_joueur[i].case_joueur;
+        }
+        while (nb_cailloux_case_fin < 3) {
+            if(cotee_ordi){
+                nb_cailloux_case_fin = suivant->cases_ordi[i].case_joueur;
+                suivant->pris_ordi.main_joueur += suivant->cases_ordi[i].case_joueur;
+                suivant->cases_ordi[i].case_joueur = 0;
+                if((i + 1) == 5){
+                    i = 0;
+                    cotee_ordi = !cotee_ordi;
+                } else if((i - 1) == -1){
+                    i = 4;
+                    cotee_ordi = !cotee_ordi;
+                }
+                i--;
+            } else {
+                nb_cailloux_case_fin = suivant->cases_joueur[i].case_joueur;
+                suivant->pris_ordi.main_joueur += suivant->cases_joueur[i].case_joueur;
+                suivant->cases_joueur[i].case_joueur = 0;
+                if((i + 1) == 5){
+                    i = 0;
+                    cotee_ordi = !cotee_ordi;
+                } else if((i - 1) == -1){
+                    i = 4;
+                    cotee_ordi = !cotee_ordi;
+                }
+                i++;
+            }
         }
     } else {
-        
+        // permet de savoir dans quelle cotee on est
+        bool cotee_ordi = false;
+        suivant->cases_joueur[i].case_joueur = 0;
+        for(int j = courante->cases_joueur[i].case_joueur;  j >= 1; j--){
+            // si on change de cotee
+            if((i + 1) == 5){
+                i = 0;
+                cotee_ordi = !cotee_ordi;
+            } else if((i - 1) == -1){
+                i = 4;
+                cotee_ordi = !cotee_ordi;
+            } else {
+                // sinon on incremente juste si on est dans notre cotee
+                // sinon on decremente
+                if(!cotee_ordi){
+                    i++;
+                } else {
+                    i--;
+                }
+            }
+            if(cotee_ordi){
+                suivant->cases_ordi[i].case_joueur++;
+            } else {
+                suivant->cases_joueur[i].case_joueur++;
+            }
+        }
     }
 }
 
