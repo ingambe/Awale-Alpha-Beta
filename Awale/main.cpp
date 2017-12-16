@@ -64,7 +64,7 @@ int evaluation(Position* courante, bool ordi_joueur1) {
 }
 
 // FONCTION DEBUG QUI AFFICHE LE JEUX
-void afficherJeux(Position *courante) {
+void afficherJeux(Position *courante, bool ordi_commence) {
 	std::cout << std::endl;
 	for (int i = 0; i < (3*NB_CASES); i++) {
 		std::cout << "-";
@@ -73,10 +73,20 @@ void afficherJeux(Position *courante) {
 	for (int i = (2*NB_CASES)-1; i > (NB_CASES - 1); i--) {
 		std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
 	}
+    if(!ordi_commence){
+        std::cout << "      score : " << courante->pris_ordi.main_joueur << std::endl;
+    } else{
+        std::cout << "      score : " << courante->pris_joueur.main_joueur << std::endl;
+    }
 	std::cout << std::endl;
 	for (int i = 0; i < NB_CASES; i++) {
 		std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
 	}
+    if(!ordi_commence){
+        std::cout << "      score : " << courante->pris_joueur.main_joueur << std::endl;
+    } else{
+        std::cout << "      score : " << courante->pris_ordi.main_joueur << std::endl;
+    }
 	std::cout << std::endl;
 	for (int i = 0; i < (3 * NB_CASES); i++) {
 		std::cout << "-";
@@ -244,6 +254,7 @@ int main(int argc, const char * argv[]) {
     std::cout << "L'ordinateur commence ? (0 pour Oui, 1 pour Non) : ";
     std::cin >> choix_debut;
     bool ordi_joue = (choix_debut == 0);
+    bool ordi_commence = ordi_joue;
 	initGame(&position);
 	int coup = 0;
 	while (!positionFinale(&position, ordi_joue)) {
@@ -261,7 +272,7 @@ int main(int argc, const char * argv[]) {
         }
 		jouerCoup(&positionSuivante, &position, coup, ordi_joue);
 		position = positionSuivante;
-		afficherJeux(&position);
+		afficherJeux(&position, ordi_commence);
         ordi_joue = !ordi_joue;
 		//afficherJeux(&positionSuivante);
 	}
