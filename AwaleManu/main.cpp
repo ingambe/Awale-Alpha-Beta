@@ -197,13 +197,10 @@ int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool or
 		//si on calcule le coup de l'ordinateur (ie on prend le max) mais que la valeur d'alpha beta du pere
 		//(ie le coup joué par l'adversaire, donc le min des fils) est inférieure a la valeur courante
 		//d'alpha beta, alors l'adversaire ne devrait pas choisir ce fils donc on ne calcul pas le reste de l'arbre
-		if (ordi_joueur1 && (alp_bet_val > bound_a_b)) {
+		//inversement si la valeur d'alpha beta est inférieure a la valeur alpha beta du pere (ie coup de l'ordi, le max des fils)
+		//on ne choisira pas cette branche donc on ne calcule pas le reste de l'arbre
+		if ((ordi_joueur1 && (alp_bet_val > bound_a_b)) || (!ordi_joueur1 && (alp_bet_val < bound_a_b))) {
 			return alp_bet_val;
-		}
-		else {
-			//inversement si la valeur d'alpha beta est inférieure a la valeur alpha beta du pere (ie coup de l'ordi, le max des fils)
-			//on ne choisira pas cette branche donc on ne calcule pas le reste de l'arbre
-			if (alp_bet_val < bound_a_b) return alp_bet_val;
 		}
 		// on joue le coup i
 		// ecrire la fn coupValide(pos_courante,ordi_joue,i)
@@ -221,7 +218,9 @@ int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool or
 			tab_valeurs[i] = valeurMinMax(&prochaine_position, profondeur + 1, profondeur_max, !ordi_joueur1, alp_bet_val);
 			//la valeur d'alpha beta devient le min/max de la valeur calculée et de la valeur alpha beta courante
 			//(min/max selon le joueur ordi ou adversaire)
-			alp_bet_val = ordi_joueur1 ? ((alp_bet_val > tab_valeurs[i]) ? alp_bet_val : tab_valeurs[i]) : ((alp_bet_val < tab_valeurs[i]) ? alp_bet_val : tab_valeurs[i]);
+			if ((ordi_joueur1 && (alp_bet_val < tab_valeurs[i])) || (!ordi_joueur1 && (alp_bet_val > tab_valeurs[i]))) {
+				alp_bet_val = tab_valeurs[i];
+			}
 		}
 		else {
 			if (courante->ordi_joue) {
@@ -234,6 +233,29 @@ int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool or
 	}
 	//on renvoie la valeur de l'alpha beta qui est le min/max calculé dynamiquement
 	return alp_bet_val;
+}
+
+int prochain_coup(Position* courante, int profondeur) {
+	Position prochaine_position;
+	int valeursMinMax[10];
+	int case_a_jouer = 1;
+	while (!coupValide(courante, case_a_jouer, true) && case_a_jouer <= 10) {
+		case_a_jouer++;
+	}
+	//si aucune case n'est jouable -> on renvoie -1 (une erreur)
+	if (case_a_jouer > 10) {
+		return -1;
+	}
+	jouerCoup(&prochaine_position, courante, case_a_jouer, true);
+	valeursMinMax[case_a_jouer - 1] = valeurMinMax(&prochaine_position, 1, profondeur, false, 100);
+	for (int i = case_a_jouer; i < 10; i++) {
+		jouerCoup(&prochaine_position, courante, i + 1, true);
+		valeursMinMax[i] = valeurMinMax(&prochaine_position, 1, profondeur, false, 100);
+		if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
+			case_a_jouer = i + 1;
+		}
+	}
+	return case_a_jouer;
 }
 
 void initGame(Position *courant, bool ordi_j1) {
