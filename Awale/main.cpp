@@ -35,9 +35,22 @@ struct Position {
     bool ordi_joue;
 };
 
+
 bool positionFinale(Position *courante){
     if(courante->pris_ordi.main_joueur >= 25 || courante->pris_joueur.main_joueur >= 25){
         return true;
+    } else {
+        int somme = 0;
+        if(courante->ordi_joue){
+            for(int i = 0; i < 5; i++){
+                somme += courante->cases_ordi[i].case_joueur;
+            }
+        } else {
+            for(int i = 0; i < 5; i++){
+                somme += courante->cases_joueur[i].case_joueur;
+            }
+        }
+        return somme == 0;
     }
     return false;
 }
@@ -70,8 +83,14 @@ bool coupValide(Position *courante, int i, bool ordi_joueur1){
 }
 
 void jouerCoup(Position* suivant, Position* courante, int i, bool ordi_joueur1){
+    // On copie d'abord la memoire
+    memcpy(suivant, courante, sizeof(Position));
+    // d'abord on deplace les cailloux
     if(courante->ordi_joue){
-        
+        suivant->cases_ordi[i].case_joueur = 0;
+        for(int j = courante->cases_ordi[i].case_joueur;  j >= 1; j--){
+            
+        }
     } else {
         
     }
@@ -79,6 +98,7 @@ void jouerCoup(Position* suivant, Position* courante, int i, bool ordi_joueur1){
 
 int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool ordi_joueur1){
     Position prochaine_position;
+    int tab_valeurs[6];
     if(positionFinale(courante)){
         // retourner 40 si ordi gagne, -40 si il perd et 0 si null
     }
@@ -93,27 +113,40 @@ int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool or
         // est pos_courante
         if (coupValide(courante, i, ordi_joueur1)){
             // ecrire la fn :
-            jouerCoup(&prochaine_position, courante, i, ordi_joueur1)
+            //jouerCoup(&prochaine_position, courante, i, ordi_joueur1);
             // on joue le coup i a partir de la position
             // pos_courante et on met le rÈsultat
             // dans pos_next
-            jouerCoup(&pos_next,pos_courante,ordi_joue,i);
+            jouerCoup(&prochaine_position, courante, i, ordi_joueur1);
             // pos_next devient la position courante, et on change le joueur
-            tab_valeurs[i]=valeurMinMax(&pos_next, !ordi_joue,prof+1,profMax);
+            tab_valeurs[i]=valeurMinMax(&prochaine_position, profondeur + 1, profondeur_max, ordi_joueur1);
         } else {
-            if (joueur==0) tab_valeurs[i]=-100.
-                else tab_valeurs[i]=+100;
+            if (courante->ordi_joue){
+                tab_valeurs[i] = -100;
+            } else {
+                tab_valeurs[i] = 100;
+            }
         }
     }
-    int res;
-    if (ordi_joue){
+    unsigned int indice = 0;
+    if (courante->ordi_joue){
         // ecrire le code: res contient le MAX de
         // tab_valeurs
+        for(int i = 1; i < 5; i++){
+            if(tab_valeurs[i] > tab_valeurs[indice]){
+                indice = i;
+            }
+        }
     } else {
         // ecrire le code : res contient le MIN de
         // tab_valeurs
+        for(int i = 1; i < 5; i++){
+            if(tab_valeurs[i] < tab_valeurs[indice]){
+                indice = i;
+            }
+        }
     }
-    return 0;
+    return indice;
 }
 
 int main(int argc, const char * argv[]) {
