@@ -28,26 +28,33 @@ struct Main_joueur {
 };
 
 struct Position {
-    Cases_joueur cases_joueur[5];
-    Cases_joueur cases_ordi[5];
+    Cases_joueur cases_jeux[10];
     Main_joueur pris_joueur;
     Main_joueur pris_ordi;
     bool ordi_joue;
 };
 
 
-bool positionFinale(Position *courante){
+bool positionFinale(Position *courante, bool ordi_joueur1){
     if(courante->pris_ordi.main_joueur >= 25 || courante->pris_joueur.main_joueur >= 25){
         return true;
     } else {
         int somme = 0;
-        if(courante->ordi_joue){
+        if(courante->ordi_joue && ordi_joueur1){
             for(int i = 0; i < 5; i++){
-                somme += courante->cases_ordi[i].case_joueur;
+                somme += courante->cases_jeux[i].case_joueur;
+            }
+        } else if(courante->ordi_joue && !ordi_joueur1){
+            for(int i = 5; i < 10; i++){
+                somme += courante->cases_jeux[i].case_joueur;
+            }
+        } else if(!courante->ordi_joue && ordi_joueur1){
+            for(int i = 5; i < 10; i++){
+                somme += courante->cases_jeux[i].case_joueur;
             }
         } else {
             for(int i = 0; i < 5; i++){
-                somme += courante->cases_joueur[i].case_joueur;
+                somme += courante->cases_jeux[i].case_joueur;
             }
         }
         return somme == 0;
@@ -55,123 +62,122 @@ bool positionFinale(Position *courante){
     return false;
 }
 
-int evaluation(Position* courante){
+int evaluation(Position* courante, bool ordi_joueur1){
     int resultat = 0;
-    if(courante->ordi_joue){
+    if(courante->ordi_joue && ordi_joueur1){
         for(int i = 0; i < 5; i++){
-            resultat += courante->cases_ordi[i].case_joueur;
+            resultat += courante->cases_jeux[i].case_joueur;
+        }
+    } else if(courante->ordi_joue && !ordi_joueur1){
+        for(int i = 5; i < 10; i++){
+            resultat += courante->cases_jeux[i].case_joueur;
+        }
+    } else if(!courante->ordi_joue && ordi_joueur1){
+        for(int i = 5; i < 10; i++){
+            resultat += courante->cases_jeux[i].case_joueur;
         }
     } else {
         for(int i = 0; i < 5; i++){
-            resultat += courante->cases_joueur[i].case_joueur;
+            resultat += courante->cases_jeux[i].case_joueur;
         }
     }
     return resultat;
 }
 
+// FONCTION DEBUG QUI AFFICHE LE JEUX
+void afficherJeux(Position *courante){
+    std::cout << std::endl;
+    for(int i = 0; i < 20; i++){
+        std::cout << "-";
+    }
+    std::cout << std::endl;
+    for(int i = 9; i > 4; i--){
+        std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
+    }
+    std::cout << std::endl;
+    for(int i = 0; i < 5; i++){
+        std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
+    }
+    std::cout << std::endl;
+    for(int i = 0; i < 20; i++){
+        std::cout << "-";
+    }
+    std::cout << std::endl;
+}
+
 bool coupValide(Position *courante, int i, bool ordi_joueur1){
+    if(i < 0 || i > 4){
+        return false;
+    }
     if(courante->ordi_joue && ordi_joueur1){
-        return i >= 0 && i <= 4 && (courante->cases_ordi[i].case_joueur > 0);
+        return courante->cases_jeux[i].case_joueur > 0;
     } else if (courante->ordi_joue && !ordi_joueur1){
-        return i >= 5 && i <= 9 && (courante->cases_ordi[i].case_joueur > 0);
+        return courante->cases_jeux[i + 5].case_joueur > 0;
     } else if (!courante->ordi_joue && ordi_joueur1){
-        return i >= 5 && i <= 9 && (courante->cases_joueur[i].case_joueur > 0);
+        return courante->cases_jeux[i + 5].case_joueur > 0;
     } else if(!courante->ordi_joue && !ordi_joueur1){
-        return i >= 0 && i <= 4 && (courante->cases_joueur[i].case_joueur > 0);
+        return courante->cases_jeux[i].case_joueur > 0;
     }
     return false;
 }
 
 void jouerCoup(Position* suivant, Position* courante, int i, bool ordi_joueur1){
-    // On copie d'abord la memoire
+    // On copie d'abord la memoire pour copier la situation courante dans la suivante
     memcpy(suivant, courante, sizeof(Position));
-    // d'abord on deplace les cailloux
-    if(courante->ordi_joue){
-        // permet de savoir dans quelle cotee on est
-        bool cotee_ordi = true;
-        suivant->cases_ordi[i].case_joueur = 0;
-        for(int j = courante->cases_ordi[i].case_joueur;  j >= 1; j--){
-            // si on change de cotee
-            if((i + 1) == 5){
-                i = 0;
-                cotee_ordi = !cotee_ordi;
-            } else if((i - 1) == -1){
-                i = 4;
-                cotee_ordi = !cotee_ordi;
-            } else {
-                // sinon on incremente juste si on est dans notre cotee
-                // sinon on decremente
-                if(cotee_ordi){
-                    i++;
-                } else {
-                    i--;
-                }
-            }
-            if(cotee_ordi){
-                suivant->cases_ordi[i].case_joueur++;
-            } else {
-                suivant->cases_joueur[i].case_joueur++;
-            }
-        }
-        int nb_cailloux_case_fin;
-        // si on fini cotee ordi
-        if(cotee_ordi){
-            nb_cailloux_case_fin = suivant->cases_ordi[i].case_joueur;
-        } else {
-            nb_cailloux_case_fin = suivant->cases_joueur[i].case_joueur;
-        }
-        while (nb_cailloux_case_fin < 3) {
-            if(cotee_ordi){
-                nb_cailloux_case_fin = suivant->cases_ordi[i].case_joueur;
-                suivant->pris_ordi.main_joueur += suivant->cases_ordi[i].case_joueur;
-                suivant->cases_ordi[i].case_joueur = 0;
-                if((i + 1) == 5){
-                    i = 0;
-                    cotee_ordi = !cotee_ordi;
-                } else if((i - 1) == -1){
-                    i = 4;
-                    cotee_ordi = !cotee_ordi;
-                }
-                i--;
-            } else {
-                nb_cailloux_case_fin = suivant->cases_joueur[i].case_joueur;
-                suivant->pris_ordi.main_joueur += suivant->cases_joueur[i].case_joueur;
-                suivant->cases_joueur[i].case_joueur = 0;
-                if((i + 1) == 5){
-                    i = 0;
-                    cotee_ordi = !cotee_ordi;
-                } else if((i - 1) == -1){
-                    i = 4;
-                    cotee_ordi = !cotee_ordi;
-                }
-                i++;
-            }
-        }
+    // on prend dans la main les cailloux
+    int main;
+    // pour savoir si on est le joueur en haut ou en bas
+    bool j_en_haut;
+    if(courante->ordi_joue && ordi_joueur1){
+        main = courante->cases_jeux[i].case_joueur;
+        suivant->cases_jeux[i].case_joueur = 0;
+        j_en_haut = false;
+    } else if (courante->ordi_joue && !ordi_joueur1){
+        i = i + 5;
+        main = courante->cases_jeux[i].case_joueur;
+        suivant->cases_jeux[i].case_joueur = 0;
+        j_en_haut = true;
+    } else if (!courante->ordi_joue && ordi_joueur1){
+        i = i + 5;
+        main = courante->cases_jeux[i + 5].case_joueur;
+        suivant->cases_jeux[i].case_joueur = 0;
+        j_en_haut = true;
     } else {
-        // permet de savoir dans quelle cotee on est
-        bool cotee_ordi = false;
-        suivant->cases_joueur[i].case_joueur = 0;
-        for(int j = courante->cases_joueur[i].case_joueur;  j >= 1; j--){
-            // si on change de cotee
-            if((i + 1) == 5){
+        main = courante->cases_jeux[i].case_joueur;
+        suivant->cases_jeux[i].case_joueur = 0;
+        j_en_haut = false;
+    }
+    while (main > 0) {
+        if(j_en_haut){
+            i--;
+            if(i == 4){
                 i = 0;
-                cotee_ordi = !cotee_ordi;
-            } else if((i - 1) == -1){
-                i = 4;
-                cotee_ordi = !cotee_ordi;
-            } else {
-                // sinon on incremente juste si on est dans notre cotee
-                // sinon on decremente
-                if(!cotee_ordi){
-                    i++;
-                } else {
-                    i--;
-                }
             }
-            if(cotee_ordi){
-                suivant->cases_ordi[i].case_joueur++;
-            } else {
-                suivant->cases_joueur[i].case_joueur++;
+        } else {
+            i++;
+            if(i == 10){
+                i = 0;
+            }
+        }
+        suivant->cases_jeux[i].case_joueur++;
+        main--;
+    }
+    while (suivant->cases_jeux[i].case_joueur < 3) {
+        if(courante->ordi_joue){
+            suivant->pris_ordi.main_joueur += suivant->cases_jeux[i].case_joueur;
+        } else {
+            suivant->pris_joueur.main_joueur += suivant->cases_jeux[i].case_joueur;
+        }
+        suivant->cases_jeux[i].case_joueur = 0;
+        if(j_en_haut){
+            i++;
+            if(i == 10){
+                i = 0;
+            }
+        } else {
+            i--;
+            if(i == -1){
+                i = 9;
             }
         }
     }
@@ -180,11 +186,11 @@ void jouerCoup(Position* suivant, Position* courante, int i, bool ordi_joueur1){
 int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool ordi_joueur1){
     Position prochaine_position;
     int tab_valeurs[6];
-    if(positionFinale(courante)){
+    if(positionFinale(courante, ordi_joueur1)){
         // retourner 40 si ordi gagne, -40 si il perd et 0 si null
     }
     if(profondeur == profondeur_max){
-        return evaluation(courante);
+        return evaluation(courante, ordi_joueur1);
     }
     for(int i = 0; i < 5; i++){
         // on joue le coup i
@@ -230,7 +236,28 @@ int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool or
     return indice;
 }
 
+void initGame(Position *courant, bool ordi_j1){
+    for (int i = 0; i < 10; i++) {
+        courant->cases_jeux[i].case_joueur = 4;
+    }
+    courant->pris_joueur.main_joueur = 0;
+    courant->pris_ordi.main_joueur = 0;
+    courant->ordi_joue = ordi_j1;
+}
+
+
 int main(int argc, const char * argv[]) {
     Position *position = (Position *) calloc(1, sizeof(Position));
+    initGame(position, true);
+    int i = 0;
+    while (!positionFinale(position, true)) {
+        Position positionSuivante;
+        int coup = 0;
+        std::cout << "Coup joueur" << (i + 1) << "(de 1 a 5)" << " : ";
+        std::cin >> coup;
+        jouerCoup(&positionSuivante, position, coup - 1, i == 0);
+        afficherJeux(&positionSuivante);
+        i = (i + 1) % 2;
+    }
     return 0;
 }
