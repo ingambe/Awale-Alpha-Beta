@@ -122,7 +122,7 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool ord
 		case_courante++;
 		main--;
 	}
-	case_courante = case_courante % (NB_CASES * 2);
+	case_courante = (case_courante - 1) % (NB_CASES * 2);
 	if (ordi_joueur1) {
 		while (case_courante >= NB_CASES && (suivant->cases_jeux[case_courante].case_joueur == 2 || suivant->cases_jeux[case_courante].case_joueur == 3)) {
 			suivant->pris_ordi.main_joueur += suivant->cases_jeux[case_courante].case_joueur;
