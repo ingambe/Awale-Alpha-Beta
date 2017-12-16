@@ -132,7 +132,6 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool ord
 	}
 	else {
 		while (case_courante >= 0 && case_courante < NB_CASES && (suivant->cases_jeux[case_courante].case_joueur == 2 || suivant->cases_jeux[case_courante].case_joueur == 3)) {
-			std::cout << "case courante prise " << case_courante << std::endl;
 			suivant->pris_ordi.main_joueur += suivant->cases_jeux[case_courante].case_joueur;
 			suivant->cases_jeux[case_courante].case_joueur = 0;
 			case_courante--;
