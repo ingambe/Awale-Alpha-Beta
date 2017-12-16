@@ -123,7 +123,11 @@ bool coupValide(Position *courante, int i, bool ordi_joueur1){
 
 void jouerCoup(Position* suivant, Position* courante, int i, bool ordi_joueur1){
     // On copie d'abord la memoire pour copier la situation courante dans la suivante
+    std::cout << "cp 1 :" << std::endl;
+    afficherJeux(courante);
     memcpy(suivant, courante, sizeof(Position));
+    std::cout << "cp 2 :" << std::endl;
+    afficherJeux(suivant);
     // on prend dans la main les cailloux
     int main;
     // pour savoir si on est le joueur en haut ou en bas
@@ -133,12 +137,12 @@ void jouerCoup(Position* suivant, Position* courante, int i, bool ordi_joueur1){
         suivant->cases_jeux[i].case_joueur = 0;
         j_en_haut = false;
     } else if (courante->ordi_joue && !ordi_joueur1){
-        i = i + 5;
+        i = 9 - i;
         main = courante->cases_jeux[i].case_joueur;
         suivant->cases_jeux[i].case_joueur = 0;
         j_en_haut = true;
     } else if (!courante->ordi_joue && ordi_joueur1){
-        i = i + 5;
+        i = 9 - i;
         main = courante->cases_jeux[i + 5].case_joueur;
         suivant->cases_jeux[i].case_joueur = 0;
         j_en_haut = true;
@@ -147,11 +151,11 @@ void jouerCoup(Position* suivant, Position* courante, int i, bool ordi_joueur1){
         suivant->cases_jeux[i].case_joueur = 0;
         j_en_haut = false;
     }
-    while (main > 0) {
+    while(main > 0){
         if(j_en_haut){
             i--;
-            if(i == 4){
-                i = 0;
+            if(i == 0){
+                i = 9;
             }
         } else {
             i++;
@@ -162,25 +166,7 @@ void jouerCoup(Position* suivant, Position* courante, int i, bool ordi_joueur1){
         suivant->cases_jeux[i].case_joueur++;
         main--;
     }
-    while (suivant->cases_jeux[i].case_joueur < 3) {
-        if(courante->ordi_joue){
-            suivant->pris_ordi.main_joueur += suivant->cases_jeux[i].case_joueur;
-        } else {
-            suivant->pris_joueur.main_joueur += suivant->cases_jeux[i].case_joueur;
-        }
-        suivant->cases_jeux[i].case_joueur = 0;
-        if(j_en_haut){
-            i++;
-            if(i == 10){
-                i = 0;
-            }
-        } else {
-            i--;
-            if(i == -1){
-                i = 9;
-            }
-        }
-    }
+        
 }
 
 int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool ordi_joueur1){
@@ -247,15 +233,16 @@ void initGame(Position *courant, bool ordi_j1){
 
 
 int main(int argc, const char * argv[]) {
-    Position *position = (Position *) calloc(1, sizeof(Position));
-    initGame(position, true);
+    Position position;
+    initGame(&position, true);
     int i = 0;
-    while (!positionFinale(position, true)) {
+    while (!positionFinale(&position, true)) {
         Position positionSuivante;
         int coup = 0;
         std::cout << "Coup joueur" << (i + 1) << "(de 1 a 5)" << " : ";
         std::cin >> coup;
-        jouerCoup(&positionSuivante, position, coup - 1, i == 0);
+        jouerCoup(&positionSuivante, &position, coup - 1, i == 0);
+        position = positionSuivante;
         afficherJeux(&positionSuivante);
         i = (i + 1) % 2;
     }
