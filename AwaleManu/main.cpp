@@ -239,6 +239,7 @@ int prochain_coup(Position* courante, int profondeur) {
 	Position prochaine_position;
 	int valeursMinMax[10];
 	int case_a_jouer = 1;
+	//on commence a calculer l'arbre a partir de la case jouable la plus a "petite"
 	while (!coupValide(courante, case_a_jouer, true) && case_a_jouer <= 10) {
 		case_a_jouer++;
 	}
@@ -246,13 +247,19 @@ int prochain_coup(Position* courante, int profondeur) {
 	if (case_a_jouer > 10) {
 		return -1;
 	}
+	//on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
 	jouerCoup(&prochaine_position, courante, case_a_jouer, true);
 	valeursMinMax[case_a_jouer - 1] = valeurMinMax(&prochaine_position, 1, profondeur, false, 100);
 	for (int i = case_a_jouer; i < 10; i++) {
-		jouerCoup(&prochaine_position, courante, i + 1, true);
-		valeursMinMax[i] = valeurMinMax(&prochaine_position, 1, profondeur, false, 100);
-		if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
-			case_a_jouer = i + 1;
+		if (coupValide(courante, i + 1, true)) {
+			//on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
+			jouerCoup(&prochaine_position, courante, i + 1, true);
+			valeursMinMax[i] = valeurMinMax(&prochaine_position, 1, profondeur, false, 100);
+			//On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
+			if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
+				//on modifie la valeur de resultat le cas echeant
+				case_a_jouer = i + 1;
+			}
 		}
 	}
 	return case_a_jouer;
