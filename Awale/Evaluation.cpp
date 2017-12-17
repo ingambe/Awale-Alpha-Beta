@@ -285,7 +285,7 @@ int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, 
         if (coupValide(courante, i + 1, true)) {
             //on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
             jouerCoup(&prochaine_position, courante, i + 1, true);
-            valeursMinMax[i] = valeurMinMax(&prochaine_position, 1, profondeur, false, 100);
+            valeursMinMax[i] = valeurMinMaxMod(&prochaine_position, 1, profondeur, false, 100, true, a1, a2, a3, a4, a5, a6);
             //On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
             if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
                 //on modifie la valeur de resultat le cas echeant
@@ -310,12 +310,12 @@ int prochain_coup_2(Position* courante, int profondeur) {
     }
     //on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
     jouerCoup(&prochaine_position, courante, case_a_jouer, true);
-    valeursMinMax[case_a_jouer - 1] = valeurMinMax(&prochaine_position, 1, profondeur, false, 100);
+    valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, false, 100, false, 0, 0, 0, 0, 0, 0);
     for (int i = case_a_jouer; i < NB_CASES; i++) {
-        if (coupValide(courante, i + 1, true)) {
+        if (coupValide(courante, i + 1, false)) {
             //on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
             jouerCoup(&prochaine_position, courante, i + 1, true);
-            valeursMinMax[i] = valeurMinMax(&prochaine_position, 1, profondeur, false, 100);
+            valeursMinMax[i] = valeurMinMaxMod(&prochaine_position, 1, profondeur, false, 100, false, 0, 0, 0, 0, 0, 0);
             //On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
             if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
                 //on modifie la valeur de resultat le cas echeant
@@ -399,7 +399,8 @@ int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6){
             afficherJeux(&position, ordi_commence);
             std::cout << "le coup : " << coup << (position.ordi_joue && ordi_commence ? " joue par le joueur 1" : " joue par le joueur 2") << std::endl;
             std::cout << "robot pierre : " << (ordi_commence ? " oui" : " non") << std::endl;
-            exit(0);
+            std::cout << "robot : " << ordi_commence << " tour robot :" << position.ordi_joue << std::endl;
+            //exit(0);
             return 0;
         }
         jouerCoup(&positionSuivante, &position, coup, ordi_commence);

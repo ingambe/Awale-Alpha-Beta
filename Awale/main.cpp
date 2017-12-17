@@ -16,9 +16,6 @@
 #include "Evaluation.hpp"
 #include "FonctionsUtilitaires.hpp"
 
-
-
-
 int prochain_coup(Position* courante, int profondeur) {
 	Position prochaine_position;
 	int valeursMinMax[NB_CASES];
