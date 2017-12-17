@@ -22,5 +22,6 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool ord
 int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool ordi_joueur1, int bound_a_b);
 void initGame(Position *courant, bool ordi_commence);
 int evaluerGagnant(Position *position, bool ordi_j1);
+void afficherJeux(Position *courante, bool ordi_commence);
 
 #endif /* FonctionsUtilitaires_hpp */

@@ -8,6 +8,36 @@
 
 #include "FonctionsUtilitaires.hpp"
 
+// FONCTION DEBUG QUI AFFICHE LE JEUX
+void afficherJeux(Position *courante, bool ordi_commence) {
+    std::cout << std::endl;
+    for (int i = 0; i < (3*NB_CASES); i++) {
+        std::cout << "-";
+    }
+    std::cout << std::endl;
+    for (int i = 0; i < NB_CASES; i++) {
+        std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
+    }
+    if(!ordi_commence){
+        std::cout << "      score : " << courante->pris_ordi.main_joueur << std::endl;
+    } else{
+        std::cout << "      score : " << courante->pris_joueur.main_joueur << std::endl;
+    }
+    std::cout << std::endl;
+    for (int i = (2 * NB_CASES) - 1; i >= NB_CASES; i--) {
+        std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
+    }
+    if(!ordi_commence){
+        std::cout << "      score : " << courante->pris_joueur.main_joueur << std::endl;
+    } else{
+        std::cout << "      score : " << courante->pris_ordi.main_joueur << std::endl;
+    }
+    std::cout << std::endl;
+    for (int i = 0; i < (3 * NB_CASES); i++) {
+        std::cout << "-";
+    }
+    std::cout << std::endl;
+}
 
 bool positionFinale(Position *courante, bool ordi_joueur1) {
     if (courante->pris_ordi.main_joueur >= (8*NB_CASES) || courante->pris_joueur.main_joueur >= (8*NB_CASES)) {
@@ -148,10 +178,19 @@ void initGame(Position *courant, bool ordi_commence) {
  *  1 si joueur 1, 2 si joueur 2, 0 si null
  **/
 int evaluerGagnant(Position *position, bool ordi_j1){
-    if(ordi_j1){
-        return (position->pris_joueur.main_joueur > position->pris_ordi.main_joueur) + 1;
-    } else if(!ordi_j1){
-        return (position->pris_ordi.main_joueur > position->pris_joueur.main_joueur) + 1;
+    // si ordi j1 et il gagne
+    if(ordi_j1 && position->pris_ordi.main_joueur > position->pris_joueur.main_joueur){
+        return 1;
+    } else if(!ordi_j1 && position->pris_ordi.main_joueur > position->pris_joueur.main_joueur){
+        // si ordi j2 et il gagne
+        return  2;
+    } else if(ordi_j1 && position->pris_ordi.main_joueur < position->pris_joueur.main_joueur){
+        // si ordi j1 et il perd
+        return 2;
+    } else if(!ordi_j1 && position->pris_ordi.main_joueur < position->pris_joueur.main_joueur){
+        // si ordi j2 et il perd
+        return 1;
     }
+    // sinon il y a match null
     return 0;
 }

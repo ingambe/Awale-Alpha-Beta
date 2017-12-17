@@ -365,13 +365,23 @@ int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6){
         coup = prochain_coup_modfiee(&position, 5, a1, a2, a3, a4, a5, a6);
         if(!coupValide(&position, coup, ordi_commence)){
             std::cout << "bug moteur jeux" << std::endl;
+            afficherJeux(&position, ordi_commence);
+            std::cout << "le coup : " << coup << (position.ordi_joue && ordi_commence ? " joue par le joueur 1" : " joue par le joueur 2") << std::endl;
+            exit(0);
             return 0;
         }
         jouerCoup(&positionSuivante, &position, coup, ordi_commence);
         position = positionSuivante;
         ordi_joue = !ordi_joue;
     }
-    return evaluerGagnant(&position, ordi_commence);
+    int gagnant = evaluerGagnant(&position, ordi_commence);
+    // si c'est l'ordi qui gagne (la fonction avec les parametres choisis)
+    if(gagnant == 1 && ordi_commence){
+        return 1;
+    } else if(gagnant == 2 && !ordi_commence){
+        return 1;
+    }
+    return 0;
 }
 
 void determinerCoeff(){
@@ -397,6 +407,9 @@ void determinerCoeff(){
                             coeff[3] = a4;
                             coeff[4] = a5;
                             coeff[5] = a6;
+                            std::cout << "Meuilleur coeff trouvee : " << std::endl;
+                            std::cout << "a1 : " << a1 << " a2 : " << a2 << " a3 : " << a3 << " a4 : " << a4 << " a5 : " << a5 << " a6 : " << a6 << std::endl;
+                            std::cout << "resultat : " << maximum << " / 50" << std::endl;
                         }
                     }
                 }

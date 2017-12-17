@@ -17,36 +17,7 @@
 #include "FonctionsUtilitaires.hpp"
 
 
-// FONCTION DEBUG QUI AFFICHE LE JEUX
-void afficherJeux(Position *courante, bool ordi_commence) {
-	std::cout << std::endl;
-	for (int i = 0; i < (3*NB_CASES); i++) {
-		std::cout << "-";
-	}
-	std::cout << std::endl;
-	for (int i = 0; i < NB_CASES; i++) {
-		std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
-	}
-    if(!ordi_commence){
-        std::cout << "      score : " << courante->pris_ordi.main_joueur << std::endl;
-    } else{
-        std::cout << "      score : " << courante->pris_joueur.main_joueur << std::endl;
-    }
-	std::cout << std::endl;
-	for (int i = (2 * NB_CASES) - 1; i >= NB_CASES; i--) {
-		std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
-	}
-    if(!ordi_commence){
-        std::cout << "      score : " << courante->pris_joueur.main_joueur << std::endl;
-    } else{
-        std::cout << "      score : " << courante->pris_ordi.main_joueur << std::endl;
-    }
-	std::cout << std::endl;
-	for (int i = 0; i < (3 * NB_CASES); i++) {
-		std::cout << "-";
-	}
-	std::cout << std::endl;
-}
+
 
 int prochain_coup(Position* courante, int profondeur) {
 	Position prochaine_position;
@@ -79,8 +50,8 @@ int prochain_coup(Position* courante, int profondeur) {
 }
 
 int main(int argc, const char * argv[]) {
-    if(argc > 1){
-        
+    if(true){
+        determinerCoeff();
     } else {
         Position position;
         Position positionSuivante;
