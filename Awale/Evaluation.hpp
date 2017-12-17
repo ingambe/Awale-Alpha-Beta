@@ -12,9 +12,14 @@
 
 #include <stdio.h>
 #include "StructureDonnee.hpp"
+#include "FonctionsUtilitaires.hpp"
+#include <stdlib.h>
+#include <time.h>
+#include <iostream>
 
 int* casesAccesibleAdversaire(Position* courante, bool ordi_joueur1);
 int nbTrouAdversairePeutUtiliser(Position* courante, bool ordi_joueur1, int nombre_cailloux_trou);
 int evaluation(Position* courante, bool ordi_joueur1);
-
+int basicEvaluation(Position* courante);
+int valeurMinMaxModifie(Position *courante, int profondeur, int profondeur_max, bool ordi_joueur1, int bound_a_b, int a1, int a2, int a3, int a4, int a5, int a6);
 #endif /* Evaluation_hpp */

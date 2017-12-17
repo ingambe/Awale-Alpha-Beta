@@ -10,6 +10,7 @@
 		721BF8231FE6A4C50078A582 /* Evaluation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 721BF81F1FE6A4C40078A582 /* Evaluation.cpp */; };
 		721BF8241FE6A4C50078A582 /* StructureDonnee.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 721BF8221FE6A4C50078A582 /* StructureDonnee.cpp */; };
 		723629061FE3355B00927338 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723629051FE3355B00927338 /* main.cpp */; };
+		72CD96671FE6B9D8003185F7 /* FonctionsUtilitaires.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CD96651FE6B9D8003185F7 /* FonctionsUtilitaires.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +32,8 @@
 		721BF8221FE6A4C50078A582 /* StructureDonnee.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StructureDonnee.cpp; sourceTree = "<group>"; };
 		723629021FE3355B00927338 /* Awale */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Awale; sourceTree = BUILT_PRODUCTS_DIR; };
 		723629051FE3355B00927338 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		72CD96651FE6B9D8003185F7 /* FonctionsUtilitaires.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FonctionsUtilitaires.cpp; sourceTree = "<group>"; };
+		72CD96661FE6B9D8003185F7 /* FonctionsUtilitaires.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FonctionsUtilitaires.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +71,8 @@
 				721BF8221FE6A4C50078A582 /* StructureDonnee.cpp */,
 				721BF8201FE6A4C40078A582 /* StructureDonnee.hpp */,
 				723629051FE3355B00927338 /* main.cpp */,
+				72CD96651FE6B9D8003185F7 /* FonctionsUtilitaires.cpp */,
+				72CD96661FE6B9D8003185F7 /* FonctionsUtilitaires.hpp */,
 			);
 			path = Awale;
 			sourceTree = "<group>";
@@ -132,6 +137,7 @@
 				721BF8241FE6A4C50078A582 /* StructureDonnee.cpp in Sources */,
 				723629061FE3355B00927338 /* main.cpp in Sources */,
 				721BF8231FE6A4C50078A582 /* Evaluation.cpp in Sources */,
+				72CD96671FE6B9D8003185F7 /* FonctionsUtilitaires.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
