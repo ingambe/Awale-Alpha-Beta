@@ -357,7 +357,7 @@ int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6){
     srand (time(NULL));
     Position position;
     Position positionSuivante;
-    bool ordi_joue = ((rand() % 2) == 0);
+    bool ordi_joue = (rand() % 2 ==0);
     bool ordi_commence = ordi_joue;
     initGame(&position, ordi_commence);
     int coup = 0;
@@ -367,7 +367,6 @@ int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6){
             std::cout << "bug moteur jeux" << std::endl;
             afficherJeux(&position, ordi_commence);
             std::cout << "le coup : " << coup << (position.ordi_joue && ordi_commence ? " joue par le joueur 1" : " joue par le joueur 2") << std::endl;
-            exit(0);
             return 0;
         }
         jouerCoup(&positionSuivante, &position, coup, ordi_commence);
@@ -400,16 +399,16 @@ void determinerCoeff(){
                             }
                             if(resultat > maximum){
                                 maximum = resultat;
+                                coeff[0] = a1;
+                                coeff[1] = a2;
+                                coeff[2] = a3;
+                                coeff[3] = a4;
+                                coeff[4] = a5;
+                                coeff[5] = a6;
+                                std::cout << "Meuilleur coeff trouvee : " << std::endl;
+                                std::cout << "a1 : " << a1 << " a2 : " << a2 << " a3 : " << a3 << " a4 : " << a4 << " a5 : " << a5 << " a6 : " << a6 << std::endl;
+                                std::cout << "resultat : " << maximum << " / 50" << std::endl;
                             }
-                            coeff[0] = a1;
-                            coeff[1] = a2;
-                            coeff[2] = a3;
-                            coeff[3] = a4;
-                            coeff[4] = a5;
-                            coeff[5] = a6;
-                            std::cout << "Meuilleur coeff trouvee : " << std::endl;
-                            std::cout << "a1 : " << a1 << " a2 : " << a2 << " a3 : " << a3 << " a4 : " << a4 << " a5 : " << a5 << " a6 : " << a6 << std::endl;
-                            std::cout << "resultat : " << maximum << " / 50" << std::endl;
                         }
                     }
                 }
