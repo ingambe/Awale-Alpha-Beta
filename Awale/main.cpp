@@ -12,28 +12,8 @@
 #include <bitset>
 #include <stdio.h>
 #include <stdlib.h>
-
-/**
-*  il y a 80 cailloux sur le plateau, inutile d'utiliser plus de 8 bits pour
-*  representer le nombre de cailloux par case
-**/
-struct Cases_joueur {
-	unsigned case_joueur : LOG_MAX_CAILLOUX;
-};
-
-/**
-*  on arrete la partie quand un des deux joueurs a plus de 25 cailloux, soit 6 bits
-**/
-struct Main_joueur {
-	unsigned main_joueur : LOG_MAX_CAILLOUX_MAIN;
-};
-
-struct Position {
-	Cases_joueur cases_jeux[2 * NB_CASES];
-	Main_joueur pris_joueur;
-	Main_joueur pris_ordi;
-};
-
+#include "StructureDonnee.hpp"
+#include "Evaluation.hpp"
 
 bool positionFinale(Position *courante, bool ordi_joueur1) {
 	if (courante->pris_ordi.main_joueur >= (8*NB_CASES) || courante->pris_joueur.main_joueur >= (8*NB_CASES)) {
@@ -54,58 +34,6 @@ bool positionFinale(Position *courante, bool ordi_joueur1) {
 		return somme == 0;
 	}
 	return false;
-}
-
-int* casesAccesibleAdversaire(Position* courante, bool ordi_joueur1){
-    int* cases_accessibles = new int[NB_CASES];
-    if(ordi_joueur1){
-        for(int i = NB_CASES; i <  2 * NB_CASES; i++){
-            cases_accessibles[i] = courante->cases_jeux[i + courante->cases_jeux[i].case_joueur].case_joueur % (2 * NB_CASES);
-        }
-    } else {
-        for(int i = 0; i < NB_CASES; i++){
-            cases_accessibles[i] = courante->cases_jeux[i + courante->cases_jeux[i].case_joueur].case_joueur % (2 * NB_CASES);
-        }
-    }
-    return cases_accessibles;
-}
-
-/**
- * Retourne le nombre de case possedant @nombre_cailloux_trou que l'adversaire peut acceder
- **/
-int nbTrouAdversairePeutUtiliser(Position* courante, bool ordi_joueur1, int nombre_cailloux_trou){
-    int* accessible = casesAccesibleAdversaire(courante, ordi_joueur1);
-    int compteur = 0;
-    for(int i = 0; i < 2 * NB_CASES; i++){
-        if(courante->cases_jeux[*(accessible + i)].case_joueur == nombre_cailloux_trou){
-            compteur++;
-        }
-    }
-    return compteur;
-}
-
-/**
- *  Au lieu d'evaluer juste les scores, on evalue aussi la situation
- *  On regarde si a cree des occasions pour l'adversaire en lui permettant
- *  D'acceder a des trous ou il pourra manger des cailloux par exemple
- **/
-int evaluation(Position* courante, bool ordi_joueur1) {
-    int evalutation = 0;
-    int a1 = 100;
-    int a2 = 100;
-    int a3 = 100;
-    int a4 = 100;
-    int a5 = 100;
-    int a6 = 100;
-    int a7 = 100;
-    int a8 = 100;
-    int a9 = 100;
-    int a10 = 100;
-    int a11 = 100;
-    int a12 = 100;
-    evalutation += a1 * nbTrouAdversairePeutUtiliser(courante, ordi_joueur1, 2);
-    evalutation += a2 * nbTrouAdversairePeutUtiliser(courante, ordi_joueur1, 3);
-    return evalutation;
 }
 
 // FONCTION DEBUG QUI AFFICHE LE JEUX
@@ -192,6 +120,7 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool ord
 			case_courante--;
 		}
 	}
+    suivant->ordi_joue = !courante->ordi_joue;
 }
 
 int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool ordi_joueur1, int bound_a_b) {
@@ -284,42 +213,42 @@ int prochain_coup(Position* courante, int profondeur) {
 	return case_a_jouer;
 }
 
-void initGame(Position *courant) {
-	for (int i = 0; i < (NB_CASES * 2); i++) {
-		courant->cases_jeux[i].case_joueur = 4;
-	}
-	courant->pris_joueur.main_joueur = 0;
-	courant->pris_ordi.main_joueur = 0;
+void initGame(Position *courant, bool ordi_commence) {
+    for (int i = 0; i < (NB_CASES * 2); i++) {
+        courant->cases_jeux[i].case_joueur = 4;
+    }
+    courant->pris_joueur.main_joueur = 0;
+    courant->pris_ordi.main_joueur = 0;
+    courant->ordi_joue = ordi_commence;
 }
 
 int main(int argc, const char * argv[]) {
-	Position position;
-	Position positionSuivante;
+    Position position;
+    Position positionSuivante;
     int choix_debut;
     std::cout << "L'ordinateur commence ? (0 pour Oui, 1 pour Non) : ";
     std::cin >> choix_debut;
     bool ordi_joue = (choix_debut == 0);
     bool ordi_commence = ordi_joue;
-	initGame(&position);
-	int coup = 0;
-	while (!positionFinale(&position, ordi_joue)) {
-		if (ordi_joue) {
-			coup = prochain_coup(&position, 5);
+    initGame(&position, ordi_commence);
+    int coup = 0;
+    while (!positionFinale(&position, ordi_commence)) {
+        if (position.ordi_joue) {
+            coup = prochain_coup(&position, 5);
             std::cout << "L'ordinateur a joue : "<< coup << std::endl;
-		}
-		else {
-			std::cout << "Coup joueur (de 1 a " << NB_CASES << ") : ";
-			std::cin >> coup;
-		}
-        if(!coupValide(&position, coup, ordi_joue)){
+        }
+        else {
+            std::cout << "Coup joueur (de 1 a " << NB_CASES << ") : ";
+            std::cin >> coup;
+        }
+        if(!coupValide(&position, coup, ordi_commence)){
             std::cout << "le coup : " << coup << " est non valide il a ete jouee par " << (ordi_joue ? "l'ordinateur" : "l'adversaire") << std::endl;
             return 0;
         }
-		jouerCoup(&positionSuivante, &position, coup, ordi_joue);
-		position = positionSuivante;
-		afficherJeux(&position, ordi_commence);
+        jouerCoup(&positionSuivante, &position, coup, ordi_joue);
+        position = positionSuivante;
+        afficherJeux(&position, ordi_commence);
         ordi_joue = !ordi_joue;
-		//afficherJeux(&positionSuivante);
-	}
-	return 0;
+    }
+    return 0;
 }
