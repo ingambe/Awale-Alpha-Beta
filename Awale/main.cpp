@@ -56,11 +56,56 @@ bool positionFinale(Position *courante, bool ordi_joueur1) {
 	return false;
 }
 
+int* casesAccesibleAdversaire(Position* courante, bool ordi_joueur1){
+    int* cases_accessibles = new int[NB_CASES];
+    if(ordi_joueur1){
+        for(int i = NB_CASES; i <  2 * NB_CASES; i++){
+            cases_accessibles[i] = courante->cases_jeux[i + courante->cases_jeux[i].case_joueur].case_joueur % (2 * NB_CASES);
+        }
+    } else {
+        for(int i = 0; i < NB_CASES; i++){
+            cases_accessibles[i] = courante->cases_jeux[i + courante->cases_jeux[i].case_joueur].case_joueur % (2 * NB_CASES);
+        }
+    }
+    return cases_accessibles;
+}
+
+/**
+ * Retourne le nombre de case possedant @nombre_cailloux_trou que l'adversaire peut acceder
+ **/
+int nbTrouAdversairePeutUtiliser(Position* courante, bool ordi_joueur1, int nombre_cailloux_trou){
+    int* accessible = casesAccesibleAdversaire(courante, ordi_joueur1);
+    int compteur = 0;
+    for(int i = 0; i < 2 * NB_CASES; i++){
+        if(courante->cases_jeux[*(accessible + i)].case_joueur == nombre_cailloux_trou){
+            compteur++;
+        }
+    }
+    return compteur;
+}
+
+/**
+ *  Au lieu d'evaluer juste les scores, on evalue aussi la situation
+ *  On regarde si a cree des occasions pour l'adversaire en lui permettant
+ *  D'acceder a des trous ou il pourra manger des cailloux par exemple
+ **/
 int evaluation(Position* courante, bool ordi_joueur1) {
-	if (ordi_joueur1) {
-		return courante->pris_ordi.main_joueur - courante->pris_joueur.main_joueur;
-	}
-	return courante->pris_joueur.main_joueur - courante->pris_ordi.main_joueur;
+    int evalutation = 0;
+    int a1 = 100;
+    int a2 = 100;
+    int a3 = 100;
+    int a4 = 100;
+    int a5 = 100;
+    int a6 = 100;
+    int a7 = 100;
+    int a8 = 100;
+    int a9 = 100;
+    int a10 = 100;
+    int a11 = 100;
+    int a12 = 100;
+    evalutation += a1 * nbTrouAdversairePeutUtiliser(courante, ordi_joueur1, 2);
+    evalutation += a1 * nbTrouAdversairePeutUtiliser(courante, ordi_joueur1, 3);
+    return evalutation;
 }
 
 // FONCTION DEBUG QUI AFFICHE LE JEUX
