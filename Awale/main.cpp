@@ -3,7 +3,7 @@
 //  Awale
 //
 //  Created by Pierre TASSEL on 14/12/2017.
-//  Copyright © 2017 Pierre TASSEL. All rights reserved.
+//  Copyright ï¿½ 2017 Pierre TASSEL. All rights reserved.
 //
 #define LOG_MAX_CAILLOUX 8
 #define LOG_MAX_CAILLOUX_MAIN 6
@@ -50,7 +50,7 @@ int prochain_coup(Position* courante, int profondeur) {
 }
 
 int main(int argc, const char * argv[]) {
-    if(false){
+    if(true){
         determinerCoeff();
     } else {
         Position position;
