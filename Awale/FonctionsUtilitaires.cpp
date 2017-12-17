@@ -75,14 +75,24 @@ bool coupValide(Position *courante, int i, bool ordi_joueur1) {
     }
 }
 
-void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool ordi_joueur1) {
+/**
+ *  Determine si on est le joueur 1
+ **/
+bool estLeJoueur1(Position *courante, bool ordi_commence){
+    return (ordi_commence && courante->ordi_joue) || (!ordi_commence && !courante->ordi_joue);
+}
+
+/**
+ *  Joue le coup en fonction du joeur
+ **/
+void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool joueur1) {
     int i = case_a_jouer - 1;
     // On copie d'abord la memoire pour copier la situation courante dans la suivante
     memcpy(suivant, courante, sizeof(Position));
     // on prend dans la main les cailloux
     int main;
     // si c'est le tour du joueur 2
-    if ((!ordi_joueur1 && courante->ordi_joue) || (ordi_joueur1 && !courante->ordi_joue)) {
+    if(!joueur1) {
         i += NB_CASES;
     }
     main = courante->cases_jeux[i].case_joueur;
@@ -98,7 +108,7 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool ord
         main--;
     }
     case_courante = (case_courante - 1) % (NB_CASES * 2);
-    if (ordi_joueur1) {
+    if (joueur1) {
         while (case_courante >= NB_CASES && (suivant->cases_jeux[case_courante].case_joueur == 2 || suivant->cases_jeux[case_courante].case_joueur == 3)) {
             suivant->pris_ordi.main_joueur += suivant->cases_jeux[case_courante].case_joueur;
             suivant->cases_jeux[case_courante].case_joueur = 0;
@@ -143,7 +153,8 @@ int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool or
             return alp_bet_val;
         }
         if (coupValide(courante, i + 1, ordi_joueur1)) {
-            jouerCoup(&prochaine_position, courante, i + 1, ordi_joueur1);
+            bool estOnLeJoueur1 = estLeJoueur1(courante, ordi_joueur1);
+            jouerCoup(&prochaine_position, courante, i + 1, estOnLeJoueur1);
             // pos_next devient la position courante, et on change le joueur
             tab_valeurs[i] = valeurMinMax(&prochaine_position, profondeur + 1, profondeur_max, !ordi_joueur1, alp_bet_val);
             //la valeur d'alpha beta devient le min/max de la valeur calculÈe et de la valeur alpha beta courante

@@ -266,7 +266,7 @@ int basicEvaluation(Position* courante) {
     return 5 * (courante->pris_ordi.main_joueur - courante->pris_joueur.main_joueur);
 }
 
-int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, int a4, int a5, int a6) {
+int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, int a4, int a5, int a6, bool j1) {
     Position prochaine_position;
     int valeursMinMax[NB_CASES];
     int case_a_jouer = 1;
@@ -279,12 +279,12 @@ int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, 
         return -1;
     }
     //on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
-    jouerCoup(&prochaine_position, courante, case_a_jouer, true);
+    jouerCoup(&prochaine_position, courante, case_a_jouer, j1);
     valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, false, 100, true, a1, a2, a3, a4, a5, a6);
     for (int i = case_a_jouer; i < NB_CASES; i++) {
         if (coupValide(courante, i + 1, true)) {
             //on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
-            jouerCoup(&prochaine_position, courante, i + 1, true);
+            jouerCoup(&prochaine_position, courante, i + 1, j1);
             valeursMinMax[i] = valeurMinMaxMod(&prochaine_position, 1, profondeur, false, 100, true, a1, a2, a3, a4, a5, a6);
             //On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
             if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
@@ -296,7 +296,7 @@ int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, 
     return case_a_jouer;
 }
 
-int prochain_coup_2(Position* courante, int profondeur) {
+int prochain_coup_2(Position* courante, int profondeur, bool j1) {
     Position prochaine_position;
     int valeursMinMax[NB_CASES];
     int case_a_jouer = 1;
@@ -309,12 +309,12 @@ int prochain_coup_2(Position* courante, int profondeur) {
         return -1;
     }
     //on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
-    jouerCoup(&prochaine_position, courante, case_a_jouer, true);
+    jouerCoup(&prochaine_position, courante, case_a_jouer, j1);
     valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, false, 100, false, 0, 0, 0, 0, 0, 0);
     for (int i = case_a_jouer; i < NB_CASES; i++) {
         if (coupValide(courante, i + 1, false)) {
             //on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
-            jouerCoup(&prochaine_position, courante, i + 1, true);
+            jouerCoup(&prochaine_position, courante, i + 1, j1);
             valeursMinMax[i] = valeurMinMaxMod(&prochaine_position, 1, profondeur, false, 100, false, 0, 0, 0, 0, 0, 0);
             //On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
             if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
@@ -384,28 +384,28 @@ int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6){
     srand (time(NULL));
     Position position;
     Position positionSuivante;
-    bool ordi_joue = (rand() % 2 ==0);
-    bool ordi_commence = ordi_joue;
+    bool ordi_commence = (rand() % 2 ==0);
+    bool j1 = true;
     initGame(&position, ordi_commence);
     int coup = 0;
     while (!positionFinale(&position, ordi_commence)) {
         if(position.ordi_joue){
-            coup = prochain_coup_1(&position, 5, a1, a2, a3, a4, a5, a6);
+            coup = prochain_coup_1(&position, 5, a1, a2, a3, a4, a5, a6, j1);
         } else {
-            coup = prochain_coup_2(&position, 5);
+            coup = prochain_coup_2(&position, 5, j1);
         }
-        if(!coupValide(&position, coup, ordi_commence)){
+        if(!coupValide(&position, coup + 1, ordi_commence)){
             std::cout << "bug moteur jeux" << std::endl;
             afficherJeux(&position, ordi_commence);
             std::cout << "le coup : " << coup << (position.ordi_joue && ordi_commence ? " joue par le joueur 1" : " joue par le joueur 2") << std::endl;
             std::cout << "robot pierre : " << (ordi_commence ? " oui" : " non") << std::endl;
             std::cout << "robot : " << ordi_commence << " tour robot :" << position.ordi_joue << std::endl;
-            //exit(0);
+            exit(0);
             return 0;
         }
-        jouerCoup(&positionSuivante, &position, coup, ordi_commence);
+        jouerCoup(&positionSuivante, &position, coup, j1);
         position = positionSuivante;
-        ordi_joue = !ordi_joue;
+        j1 = !j1;
     }
     int gagnant = evaluerGagnant(&position, ordi_commence);
     // si c'est l'ordi qui gagne (la fonction avec les parametres choisis)

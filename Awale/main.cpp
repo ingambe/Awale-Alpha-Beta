@@ -55,8 +55,7 @@ int main(int argc, const char * argv[]) {
         int choix_debut;
         std::cout << "L'ordinateur commence ? (0 pour Oui, 1 pour Non) : ";
         std::cin >> choix_debut;
-        bool ordi_joue = (choix_debut == 0);
-        bool ordi_commence = ordi_joue;
+        bool ordi_commence = (choix_debut == 0);
         initGame(&position, ordi_commence);
         int coup = 0;
         while (!positionFinale(&position, ordi_commence)) {
@@ -69,13 +68,13 @@ int main(int argc, const char * argv[]) {
                 std::cin >> coup;
             }
             if(!coupValide(&position, coup, ordi_commence)){
-                std::cout << "le coup : " << coup << " est non valide il a ete jouee par " << (ordi_joue ? "l'ordinateur" : "l'adversaire") << std::endl;
+                std::cout << "le coup : " << coup << " est non valide il a ete jouee par " << (position.ordi_joue ? "l'ordinateur" : "l'adversaire") << std::endl;
                 return 0;
             }
-            jouerCoup(&positionSuivante, &position, coup, ordi_commence);
+            bool estOnLeJoueur1 = estLeJoueur1(&position, ordi_commence);
+            jouerCoup(&positionSuivante, &position, coup, estOnLeJoueur1);
             position = positionSuivante;
             afficherJeux(&position, ordi_commence);
-            ordi_joue = !ordi_joue;
         }
     }
     return 0;

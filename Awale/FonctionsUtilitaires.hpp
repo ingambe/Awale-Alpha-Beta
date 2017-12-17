@@ -18,7 +18,8 @@
 
 bool positionFinale(Position *courante, bool ordi_joueur1);
 bool coupValide(Position *courante, int i, bool ordi_joueur1);
-void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool ordi_joueur1);
+void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool joueur1);
+bool estLeJoueur1(Position *courante, bool ordi_commence);
 int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool ordi_joueur1, int bound_a_b);
 void initGame(Position *courant, bool ordi_commence);
 int evaluerGagnant(Position *position, bool ordi_j1);
