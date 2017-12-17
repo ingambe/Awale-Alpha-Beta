@@ -308,10 +308,10 @@ int valeurMinMaxModifie(Position *courante, int profondeur, int profondeur_max, 
         }
         else {
             if (ordi_joueur1) {
-                tab_valeurs[i] = -100;
+                tab_valeurs[i] = -10000000;
             }
             else {
-                tab_valeurs[i] = 100;
+                tab_valeurs[i] = 10000000;
             }
         }
     }
@@ -323,7 +323,7 @@ int basicEvaluation(Position* courante) {
     return 5 * (courante->pris_ordi.main_joueur - courante->pris_joueur.main_joueur);
 }
 
-int prochain_coup_modfiee(Position* courante, int profondeur, int a1, int a2, int a3, int a4, int a5, int a6) {
+int prochain_coup_modfiee(Position* courante, int profondeur, int a1, int a2, int a3, int a4, int a5, int a6, bool ordi_j1) {
     Position prochaine_position;
     int valeursMinMax[NB_CASES];
     int case_a_jouer = 1;
@@ -336,13 +336,13 @@ int prochain_coup_modfiee(Position* courante, int profondeur, int a1, int a2, in
         return -1;
     }
     //on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
-    jouerCoup(&prochaine_position, courante, case_a_jouer, true);
-    valeursMinMax[case_a_jouer - 1] = valeurMinMaxModifie(&prochaine_position, 1, profondeur, false, 100,a1, a2, a3, a4, a5, a6);
+    jouerCoup(&prochaine_position, courante, case_a_jouer, ordi_j1);
+    valeursMinMax[case_a_jouer - 1] = valeurMinMaxModifie(&prochaine_position, 1, profondeur, ordi_j1, 100,a1, a2, a3, a4, a5, a6);
     for (int i = case_a_jouer; i < NB_CASES; i++) {
-        if (coupValide(courante, i + 1, true)) {
+        if (coupValide(courante, i + 1, ordi_j1)) {
             //on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
-            jouerCoup(&prochaine_position, courante, i + 1, true);
-            valeursMinMax[i] = valeurMinMaxModifie(&prochaine_position, 1, profondeur, false, 100, a1, a2, a3, a4, a5, a6);
+            jouerCoup(&prochaine_position, courante, i + 1, ordi_j1);
+            valeursMinMax[i] = valeurMinMaxModifie(&prochaine_position, 1, profondeur, ordi_j1, 100, a1, a2, a3, a4, a5, a6);
             //On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
             if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
                 //on modifie la valeur de resultat le cas echeant
@@ -362,11 +362,13 @@ int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6){
     initGame(&position, ordi_commence);
     int coup = 0;
     while (!positionFinale(&position, ordi_commence)) {
-        coup = prochain_coup_modfiee(&position, 5, a1, a2, a3, a4, a5, a6);
+        coup = prochain_coup_modfiee(&position, 5, a1, a2, a3, a4, a5, a6, ordi_commence);
         if(!coupValide(&position, coup, ordi_commence)){
             std::cout << "bug moteur jeux" << std::endl;
             afficherJeux(&position, ordi_commence);
             std::cout << "le coup : " << coup << (position.ordi_joue && ordi_commence ? " joue par le joueur 1" : " joue par le joueur 2") << std::endl;
+            std::cout << "robot pierre : " << (ordi_commence ? " oui" : " non") << std::endl;
+            exit(0);
             return 0;
         }
         jouerCoup(&positionSuivante, &position, coup, ordi_commence);

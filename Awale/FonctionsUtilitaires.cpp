@@ -154,10 +154,10 @@ int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool or
         }
         else {
             if (ordi_joueur1) {
-                tab_valeurs[i] = -100;
+                tab_valeurs[i] = -1000000;
             }
             else {
-                tab_valeurs[i] = 100;
+                tab_valeurs[i] = 1000000;
             }
         }
     }
