@@ -43,7 +43,7 @@ void afficherJeux(Position *courante, bool ordi_commence) {
 		std::cout << "-";
 	}
 	std::cout << std::endl;
-	for (int i = (2*NB_CASES)-1; i > (NB_CASES - 1); i--) {
+	for (int i = 0; i < NB_CASES; i++) {
 		std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
 	}
     if(!ordi_commence){
@@ -52,7 +52,7 @@ void afficherJeux(Position *courante, bool ordi_commence) {
         std::cout << "      score : " << courante->pris_joueur.main_joueur << std::endl;
     }
 	std::cout << std::endl;
-	for (int i = 0; i < NB_CASES; i++) {
+	for (int i = (2 * NB_CASES) - 1; i >= NB_CASES; i--) {
 		std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
 	}
     if(!ordi_commence){
@@ -68,30 +68,29 @@ void afficherJeux(Position *courante, bool ordi_commence) {
 }
 
 bool coupValide(Position *courante, int i, bool ordi_joueur1) {
-	if ((i - 1) < 0 || (i - 1) > NB_CASES) {
-		return false;
-	}
-	if (ordi_joueur1) {
-		return courante->cases_jeux[i - 1].case_joueur > 0;
-	}
-	return courante->cases_jeux[i + NB_CASES - 1].case_joueur > 0;;
+    if ((i - 1) < 0 || (i - 1) > NB_CASES) {
+        return false;
+    }
+    if(ordi_joueur1 && courante->ordi_joue) {
+        return courante->cases_jeux[i - 1].case_joueur > 0;
+    } else if(ordi_joueur1 && !courante->ordi_joue) {
+        return courante->cases_jeux[i + NB_CASES - 1].case_joueur > 0;
+    } else if (!ordi_joueur1 && courante->ordi_joue){
+        return courante->cases_jeux[i + NB_CASES - 1].case_joueur > 0;
+    } else {
+        return courante->cases_jeux[i - 1].case_joueur > 0;
+    }
 }
 
 void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool ordi_joueur1) {
 	int i = case_a_jouer - 1;
 	// On copie d'abord la memoire pour copier la situation courante dans la suivante
-	//std::cout << "cp 1 :" << std::endl;
-	//afficherJeux(courante);
 	memcpy(suivant, courante, sizeof(Position));
-	//std::cout << "cp 2 :" << std::endl;
-	//afficherJeux(suivant);
 	// on prend dans la main les cailloux
 	int main;
-	if (!ordi_joueur1) {
+    // si c'est le tour du joueur 2
+	if ((!ordi_joueur1 && courante->ordi_joue) || (ordi_joueur1 && !courante->ordi_joue)) {
 		i += NB_CASES;
-	}
-	for (int j = 0; j <= (NB_CASES * 2); j++) {
-		suivant->cases_jeux[j].case_joueur = courante->cases_jeux[j].case_joueur;
 	}
 	main = courante->cases_jeux[i].case_joueur;
 	suivant->cases_jeux[i].case_joueur = 0;
@@ -245,7 +244,7 @@ int main(int argc, const char * argv[]) {
             std::cout << "le coup : " << coup << " est non valide il a ete jouee par " << (ordi_joue ? "l'ordinateur" : "l'adversaire") << std::endl;
             return 0;
         }
-        jouerCoup(&positionSuivante, &position, coup, ordi_joue);
+        jouerCoup(&positionSuivante, &position, coup, ordi_commence);
         position = positionSuivante;
         afficherJeux(&position, ordi_commence);
         ordi_joue = !ordi_joue;

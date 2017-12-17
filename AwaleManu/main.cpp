@@ -155,7 +155,7 @@ bool coupValide(Position *courante, int i, bool ordi_joueur1) {
 	if (ordi_joueur1) {
 		return courante->cases_jeux[i - 1].case_joueur > 0;
 	}
-	return courante->cases_jeux[i + NB_CASES - 1].case_joueur > 0;;
+	return courante->cases_jeux[i + NB_CASES - 1].case_joueur > 0;
 }
 
 void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool ordi_joueur1) {
