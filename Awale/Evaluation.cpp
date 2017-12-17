@@ -267,7 +267,7 @@ int evaluation(Position* courante, bool ordi_joueur1, int a1, int a2, int a3, in
  **/
 int valeurMinMaxModifie(Position *courante, int profondeur, int profondeur_max, bool ordi_joueur1, int bound_a_b, int a1, int a2, int a3, int a4, int a5, int a6) {
     Position prochaine_position;
-    int alp_bet_val = ordi_joueur1 ? -100 : 100;
+    int alp_bet_val = ordi_joueur1 ? -100000 : 1000000;
     int tab_valeurs[NB_CASES];
     if (positionFinale(courante, ordi_joueur1)) {
         if (courante->pris_ordi.main_joueur > courante->pris_joueur.main_joueur) {
