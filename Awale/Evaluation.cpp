@@ -381,31 +381,32 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, bool
 }
 
 int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6){
-    srand (time(NULL));
+    srand(time(NULL));
     Position position;
     Position positionSuivante;
-    bool ordi_commence = (rand() % 2 ==0);
+    bool ordi_commence = true;
     bool j1 = true;
     initGame(&position, ordi_commence);
     int coup = 0;
-    while (!positionFinale(&position, ordi_commence)) {
+    int nbCoup = 0;
+    while (!positionFinale(&position, ordi_commence) && nbCoup < 1000) {
         if(position.ordi_joue){
             coup = prochain_coup_1(&position, 5, a1, a2, a3, a4, a5, a6, j1);
         } else {
             coup = prochain_coup_2(&position, 5, j1);
         }
-        if(!coupValide(&position, coup + 1, ordi_commence)){
+        if(!coupValide(&position, coup, ordi_commence)){
             std::cout << "bug moteur jeux" << std::endl;
             afficherJeux(&position, ordi_commence);
             std::cout << "le coup : " << coup << (position.ordi_joue && ordi_commence ? " joue par le joueur 1" : " joue par le joueur 2") << std::endl;
             std::cout << "robot pierre : " << (ordi_commence ? " oui" : " non") << std::endl;
             std::cout << "robot : " << ordi_commence << " tour robot :" << position.ordi_joue << std::endl;
             exit(0);
-            return 0;
         }
         jouerCoup(&positionSuivante, &position, coup, j1);
         position = positionSuivante;
         j1 = !j1;
+        nbCoup++;
     }
     int gagnant = evaluerGagnant(&position, ordi_commence);
     // si c'est l'ordi qui gagne (la fonction avec les parametres choisis)
@@ -431,6 +432,8 @@ void determinerCoeff(){
                             for(int i = 0; i < 50; i++){
                                 resultat += jouerPartieDeuxRobot(a1, a2, a3, a4, a5, a6);
                             }
+                            std::cout << "Test avec ces coeffs fini : " << std::endl;
+                            std::cout << "a1 : " << a1 << " a2 : " << a2 << " a3 : " << a3 << " a4 : " << a4 << " a5 : " << a5 << " a6 : " << a6 << std::endl;
                             if(resultat > maximum){
                                 maximum = resultat;
                                 coeff[0] = a1;
@@ -444,6 +447,7 @@ void determinerCoeff(){
                                 std::cout << "resultat : " << maximum << " / 50" << std::endl;
                             }
                         }
+                        std::cout << "le programme tourne toujours : " << maximum << std::endl;
                     }
                 }
             }
