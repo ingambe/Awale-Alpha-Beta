@@ -104,7 +104,7 @@ int evaluation(Position* courante, bool ordi_joueur1) {
     int a11 = 100;
     int a12 = 100;
     evalutation += a1 * nbTrouAdversairePeutUtiliser(courante, ordi_joueur1, 2);
-    evalutation += a1 * nbTrouAdversairePeutUtiliser(courante, ordi_joueur1, 3);
+    evalutation += a2 * nbTrouAdversairePeutUtiliser(courante, ordi_joueur1, 3);
     return evalutation;
 }
 
