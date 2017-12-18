@@ -3,7 +3,7 @@
 //  Awale
 //
 //  Created by Pierre TASSEL on 17/12/2017.
-//  Copyright © 2017 Pierre TASSEL. All rights reserved.
+//  Copyright ï¿½ 2017 Pierre TASSEL. All rights reserved.
 //
 
 #include "Evaluation.hpp"
@@ -44,7 +44,7 @@ int nbTrouPeutUtiliser(Position* courante, int* cases_accessible, int nombre_cai
 
 /**
 *  Au lieu d'evaluer juste les scores, on evalue aussi la situation
-*  On regarde si ça cree des occasions pour l'adversaire en lui permettant
+*  On regarde si ï¿½a cree des occasions pour l'adversaire en lui permettant
 *  D'acceder a des trous ou il pourra manger des cailloux par exemple
 **/
 int evaluation(Position* courante, bool ordi_joueur1) {
@@ -273,6 +273,10 @@ int basicEvaluation(Position* courante) {
 	return 5 * (courante->pris_ordi.main_joueur - courante->pris_joueur.main_joueur);
 }
 
+int basicEvaluationMod(Position* courante) {
+    return 5 * (courante->pris_joueur.main_joueur - courante->pris_ordi.main_joueur);
+}
+
 int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, int a4, int a5, int a6, bool j1) {
 	Position prochaine_position;
 	int valeursMinMax[NB_CASES];
@@ -358,9 +362,9 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, bool
 	}
 	for (int i = 0; i < NB_CASES; i++) {
 		//si on calcule le coup de l'ordinateur (ie on prend le max) mais que la valeur d'alpha beta du pere
-		//(ie le coup jouÈ par l'adversaire, donc le min des fils) est infÈrieure a la valeur courante
+		//(ie le coup jouï¿½ par l'adversaire, donc le min des fils) est infï¿½rieure a la valeur courante
 		//d'alpha beta, alors l'adversaire ne devrait pas choisir ce fils donc on ne calcul pas le reste de l'arbre
-		//inversement si la valeur d'alpha beta est infÈrieure a la valeur alpha beta du pere (ie coup de l'ordi, le max des fils)
+		//inversement si la valeur d'alpha beta est infï¿½rieure a la valeur alpha beta du pere (ie coup de l'ordi, le max des fils)
 		//on ne choisira pas cette branche donc on ne calcule pas le reste de l'arbre
 		if ((ordi_joueur1 && (alp_bet_val > bound_a_b)) || (!ordi_joueur1 && (alp_bet_val < bound_a_b))) {
 			return alp_bet_val;
@@ -369,7 +373,7 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, bool
 			jouerCoup(&prochaine_position, courante, i + 1, ordi_joueur1);
 			// pos_next devient la position courante, et on change le joueur
 			tab_valeurs[i] = valeurMinMax(&prochaine_position, profondeur + 1, profondeur_max, !ordi_joueur1, alp_bet_val);
-			//la valeur d'alpha beta devient le min/max de la valeur calculÈe et de la valeur alpha beta courante
+			//la valeur d'alpha beta devient le min/max de la valeur calculï¿½e et de la valeur alpha beta courante
 			//(min/max selon le joueur ordi ou adversaire)
 			if ((ordi_joueur1 && (alp_bet_val < tab_valeurs[i])) || (!ordi_joueur1 && (alp_bet_val > tab_valeurs[i]))) {
 				alp_bet_val = tab_valeurs[i];
@@ -384,7 +388,7 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, bool
 			}
 		}
 	}
-	//on renvoie la valeur de l'alpha beta qui est le min/max calculÈ dynamiquement
+	//on renvoie la valeur de l'alpha beta qui est le min/max calculï¿½ dynamiquement
 	return alp_bet_val;
 }
 
