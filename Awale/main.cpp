@@ -30,12 +30,12 @@ int prochain_coup(Position* courante, int profondeur) {
 	}
 	//on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
 	jouerCoup(&prochaine_position, courante, case_a_jouer);
-	valeursMinMax[case_a_jouer - 1] = valeurMinMax(&prochaine_position, 1, profondeur, 100);
+	valeursMinMax[case_a_jouer - 1] = valeurMinMax(&prochaine_position, 1, profondeur, -100);
 	for (int i = case_a_jouer; i < NB_CASES; i++) {
 		if (coupValide(courante, i + 1)) {
 			//on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
 			jouerCoup(&prochaine_position, courante, i + 1);
-			valeursMinMax[i] = valeurMinMax(&prochaine_position, 1, profondeur, 100);
+			valeursMinMax[i] = valeurMinMax(&prochaine_position, 1, profondeur, valeursMinMax[case_a_jouer - 1]);
 			//On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
 			if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
 				//on modifie la valeur de resultat le cas echeant
@@ -61,7 +61,7 @@ int main(int argc, const char * argv[]) {
 		int coup = 0;
 		while (!positionFinale(&position)) {
 			if (position.ordi_joue) {
-				coup = prochain_coup(&position, 5, ordi_commence);
+				coup = prochain_coup(&position, 5);
 				std::cout << "L'ordinateur a joue : " << coup << std::endl;
 			}
 			else {
