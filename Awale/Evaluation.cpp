@@ -55,7 +55,7 @@ int nbTrouPeutUtiliser(Position* courante, int* cases_accessible, int nombre_cai
 *  On regarde si �a cree des occasions pour l'adversaire en lui permettant
 *  D'acceder a des trous ou il pourra manger des cailloux par exemple
 **/
-int evaluation(Position* courante, bool ordi_joueur1) {
+int evaluation(Position* courante) {
 	bool ordi_joueur1 = courante->ordi_joueur1;
 	int evalutation = 0;
 	int* accessible_j1 = casesAccesiblesJoueur(courante, true);
