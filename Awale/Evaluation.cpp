@@ -449,15 +449,15 @@ void determinerCoeff() {
 	int coeff[7];
 	int maximum = 0;
 	int resultat = 0;
-	for (int a1 = -40; a1 <= 40; a1++) {
-		for (int a2 = -40; a2 <= 40; a2++) {
-			for (int a3 = -40; a3 <= 40; a3++) {
-				for (int a4 = -40; a4 <= 40; a4++) {
-					for (int a5 = -40; a5 <= 40; a5++) {
-						for (int a6 = -40; a6 <= 40; a6++) {
-                            for (int a7 = -40; a7 <= 40; a7++) {
+	for (int a1 = -10; a1 <= 10; a1++) {
+		for (int a2 = -10; a2 <= 10; a2++) {
+			for (int a3 = -10; a3 <= 10; a3++) {
+				for (int a4 = -10; a4 <= 10; a4++) {
+					for (int a5 = -10; a5 <= 10; a5++) {
+						for (int a6 = -10; a6 <= 10; a6++) {
+                            for (int a7 = -10; a7 <= 10; a7++) {
                                 resultat = 0;
-                                for (int i = 0; i < 30; i++) {
+                                for (int i = 0; i < 20; i++) {
                                     resultat += jouerPartieDeuxRobot(a1, a2, a3, a4, a5, a6, a7);
                                 }
                                 if (resultat > maximum) {
@@ -471,11 +471,10 @@ void determinerCoeff() {
                                     coeff[6] = a7;
                                     std::cout << "Meuilleur coeff trouvee : " << std::endl;
                                     std::cout << "a1 : " << a1 << " a2 : " << a2 << " a3 : " << a3 << " a4 : " << a4 << " a5 : " << a5 << " a6 : " << a6 << " a7 : " << a7 << std::endl;
-                                    std::cout << "resultat : " << maximum << " / 30" << std::endl;
+                                    std::cout << "resultat : " << maximum << " / 20" << std::endl;
                                 }
                             }
 						}
-						std::cout << "le programme tourne toujours, maximum : " << maximum << std::endl;
 					}
 				}
 			}
