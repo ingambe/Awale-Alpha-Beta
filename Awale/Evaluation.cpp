@@ -302,13 +302,11 @@ int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, 
 	}
 	//on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
 	jouerCoup(&prochaine_position, courante, case_a_jouer);
-	valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, 100, true, a1, a2, a3, a4, a5, a6, a7);
-	for (int i = case_a_jouer; i < NB_CASES; i++) {
+valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, -100, true, a1, a2, a3, a4, a5, a6, a7);	for (int i = case_a_jouer; i < NB_CASES; i++) {
 		if (coupValide(courante, i + 1)) {
 			//on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
 			jouerCoup(&prochaine_position, courante, i + 1);
-			valeursMinMax[i] = valeurMinMaxMod(&prochaine_position, 1, profondeur, 100, true, a1, a2, a3, a4, a5, a6, a7);
-			//On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
+valeursMinMax[i] = valeurMinMaxMod(&prochaine_position, 1, profondeur, valeursMinMax[case_a_jouer - 1], true, a1, a2, a3, a4, a5, a6);			//On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
 			if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
 				//on modifie la valeur de resultat le cas echeant
 				case_a_jouer = i + 1;
@@ -332,8 +330,7 @@ int prochain_coup_2(Position* courante, int profondeur) {
 	}
 	//on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
 	jouerCoup(&prochaine_position, courante, case_a_jouer);
-	valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, 100, false, 0, 0, 0, 0, 0, 0, 0);
-	for (int i = case_a_jouer; i < NB_CASES; i++) {
+valeursMinMax[i] = valeurMinMaxMod(&prochaine_position, 1, profondeur, valeursMinMax[case_a_jouer - 1], false, 0, 0, 0, 0, 0, 0);	for (int i = case_a_jouer; i < NB_CASES; i++) {
 		if (coupValide(courante, i + 1)) {
 			//on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
 			jouerCoup(&prochaine_position, courante, i + 1);
