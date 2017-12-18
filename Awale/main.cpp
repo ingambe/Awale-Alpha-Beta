@@ -16,7 +16,7 @@
 #include "Evaluation.hpp"
 #include "FonctionsUtilitaires.hpp"
 
-int prochain_coup(Position* courante, int profondeur, bool ordi_joueur1) {
+int prochain_coup(Position* courante, int profondeur) {
 	Position prochaine_position;
 	int valeursMinMax[NB_CASES];
 	int case_a_jouer = 1;
