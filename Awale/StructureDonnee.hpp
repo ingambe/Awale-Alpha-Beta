@@ -35,6 +35,7 @@ struct Position {
 	Main_joueur pris_joueur;
 	Main_joueur pris_ordi;
 	bool ordi_joue;
+	bool ordi_joueur1;
 };
 
 

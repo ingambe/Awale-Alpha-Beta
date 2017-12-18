@@ -9,7 +9,8 @@
 #include "FonctionsUtilitaires.hpp"
 
 // FONCTION DEBUG QUI AFFICHE LE JEUX
-void afficherJeux(Position *courante, bool ordi_commence) {
+void afficherJeux(Position *courante) {
+	bool ordi_commence = courante->ordi_joueur1;
 	std::cout << std::endl;
 	for (int i = 0; i < (3 * NB_CASES); i++) {
 		std::cout << "-";
@@ -41,7 +42,8 @@ void afficherJeux(Position *courante, bool ordi_commence) {
 	std::cout << std::endl;
 }
 
-bool positionFinale(Position *courante, bool ordi_joueur1) {
+bool positionFinale(Position *courante) {
+	bool ordi_joueur1 = courante->ordi_joueur1;
 	//on regarde s'il reste des puits non vide au joueur courant
 	int somme = 0;
 	if (courante->pris_ordi.main_joueur >= (8 * NB_CASES) || courante->pris_joueur.main_joueur >= (8 * NB_CASES)) {
@@ -72,7 +74,8 @@ bool positionFinale(Position *courante, bool ordi_joueur1) {
 	return somme == 0;
 }
 
-bool coupValide(Position *courante, int i, bool ordi_joueur1) {
+bool coupValide(Position *courante, int i) {
+	bool ordi_joueur1 = courante->ordi_joueur1;
 	if ((i - 1) < 0 || (i - 1) > NB_CASES) {
 		return false;
 	}
@@ -93,14 +96,16 @@ bool coupValide(Position *courante, int i, bool ordi_joueur1) {
 /**
 *  Determine si on est le joueur 1
 **/
-bool estLeJoueur1(Position *courante, bool ordi_commence) {
+bool estLeJoueur1(Position *courante) {
+	bool ordi_commence = courante->ordi_joueur1;
 	return (ordi_commence && courante->ordi_joue) || (!ordi_commence && !courante->ordi_joue);
 }
 
 /**
 *  Joue le coup en fonction du joeur
 **/
-void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool joueur1) {
+void jouerCoup(Position* suivant, Position* courante, int case_a_jouer) {
+	bool joueur1 = courante->ordi_joueur1;
 	int i = case_a_jouer - 1;
 	// On copie d'abord la memoire pour copier la situation courante dans la suivante
 	memcpy(suivant, courante, sizeof(Position));
@@ -152,10 +157,11 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool jou
 	suivant->ordi_joue = !courante->ordi_joue;
 }
 
-int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool ordi_joueur1, int bound_a_b) {
+int valeurMinMax(Position *courante, int profondeur, int profondeur_max, int bound_a_b) {
 	Position prochaine_position;
 	int alp_bet_val = courante->ordi_joue ? -100 : 100;
 	int tab_valeurs[NB_CASES];
+	bool ordi_joueur1 = courante->ordi_joueur1;
 	if (positionFinale(courante, ordi_joueur1)) {
 		if (courante->pris_ordi.main_joueur > courante->pris_joueur.main_joueur) {
 			return 40;
@@ -209,25 +215,26 @@ void initGame(Position *courant, bool ordi_commence) {
 	courant->pris_joueur.main_joueur = 0;
 	courant->pris_ordi.main_joueur = 0;
 	courant->ordi_joue = ordi_commence;
+	courant->ordi_joueur1 = ordi_commence;
 }
 
 /**
 *  1 si joueur 1, 2 si joueur 2, 0 si null
 **/
-int evaluerGagnant(Position *position, bool ordi_j1) {
+int evaluerGagnant(Position *position) {
 	// si ordi j1 et il gagne
-	if (ordi_j1 && position->pris_ordi.main_joueur > position->pris_joueur.main_joueur) {
+	if (position->ordi_joueur1 && position->pris_ordi.main_joueur > position->pris_joueur.main_joueur) {
 		return 1;
 	}
-	else if (!ordi_j1 && position->pris_ordi.main_joueur > position->pris_joueur.main_joueur) {
+	else if (!position->ordi_joueur1 && position->pris_ordi.main_joueur > position->pris_joueur.main_joueur) {
 		// si ordi j2 et il gagne
 		return  2;
 	}
-	else if (ordi_j1 && position->pris_ordi.main_joueur < position->pris_joueur.main_joueur) {
+	else if (position->ordi_joueur1 && position->pris_ordi.main_joueur < position->pris_joueur.main_joueur) {
 		// si ordi j1 et il perd
 		return 2;
 	}
-	else if (!ordi_j1 && position->pris_ordi.main_joueur < position->pris_joueur.main_joueur) {
+	else if (!position->ordi_joueur1 && position->pris_ordi.main_joueur < position->pris_joueur.main_joueur) {
 		// si ordi j2 et il perd
 		return 1;
 	}

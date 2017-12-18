@@ -21,7 +21,7 @@ int prochain_coup(Position* courante, int profondeur, bool ordi_joueur1) {
 	int valeursMinMax[NB_CASES];
 	int case_a_jouer = 1;
 	//on commence a calculer l'arbre a partir de la case jouable la plus a "petite"
-	while (!coupValide(courante, case_a_jouer, ordi_joueur1) && case_a_jouer <= NB_CASES) {
+	while (!coupValide(courante, case_a_jouer) && case_a_jouer <= NB_CASES) {
 		case_a_jouer++;
 	}
 	//si aucune case n'est jouable -> on renvoie -1 (une erreur)
@@ -29,13 +29,13 @@ int prochain_coup(Position* courante, int profondeur, bool ordi_joueur1) {
 		return -1;
 	}
 	//on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
-	jouerCoup(&prochaine_position, courante, case_a_jouer, ordi_joueur1);
-	valeursMinMax[case_a_jouer - 1] = valeurMinMax(&prochaine_position, 1, profondeur, ordi_joueur1, 100);
+	jouerCoup(&prochaine_position, courante, case_a_jouer);
+	valeursMinMax[case_a_jouer - 1] = valeurMinMax(&prochaine_position, 1, profondeur, 100);
 	for (int i = case_a_jouer; i < NB_CASES; i++) {
-		if (coupValide(courante, i + 1, ordi_joueur1)) {
+		if (coupValide(courante, i + 1)) {
 			//on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
-			jouerCoup(&prochaine_position, courante, i + 1, ordi_joueur1);
-			valeursMinMax[i] = valeurMinMax(&prochaine_position, 1, profondeur, ordi_joueur1, 100);
+			jouerCoup(&prochaine_position, courante, i + 1);
+			valeursMinMax[i] = valeurMinMax(&prochaine_position, 1, profondeur, 100);
 			//On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
 			if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
 				//on modifie la valeur de resultat le cas echeant
@@ -59,7 +59,7 @@ int main(int argc, const char * argv[]) {
 		bool ordi_commence = (choix_debut == 0);
 		initGame(&position, ordi_commence);
 		int coup = 0;
-		while (!positionFinale(&position, ordi_commence)) {
+		while (!positionFinale(&position)) {
 			if (position.ordi_joue) {
 				coup = prochain_coup(&position, 5, ordi_commence);
 				std::cout << "L'ordinateur a joue : " << coup << std::endl;
@@ -68,13 +68,13 @@ int main(int argc, const char * argv[]) {
 				std::cout << "Coup joueur (de 1 a " << NB_CASES << ") : ";
 				std::cin >> coup;
 			}
-			if (!coupValide(&position, coup, ordi_commence)) {
+			if (!coupValide(&position, coup)) {
 				std::cout << "le coup : " << coup << " est non valide il a ete jouee par " << (position.ordi_joue ? "l'ordinateur" : "l'adversaire") << std::endl;
 				return 0;
 			}
-			jouerCoup(&positionSuivante, &position, coup, ordi_commence);
+			jouerCoup(&positionSuivante, &position, coup);
 			position = positionSuivante;
-			afficherJeux(&position, ordi_commence);
+			afficherJeux(&position);
 		}
 	}
 	return 0;

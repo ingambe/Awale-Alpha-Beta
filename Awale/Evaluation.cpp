@@ -48,6 +48,7 @@ int nbTrouPeutUtiliser(Position* courante, int* cases_accessible, int nombre_cai
 *  D'acceder a des trous ou il pourra manger des cailloux par exemple
 **/
 int evaluation(Position* courante, bool ordi_joueur1) {
+	bool ordi_joueur1 = courante->ordi_joueur1;
 	int evalutation = 0;
 	int* accessible_j1 = casesAccesiblesJoueur(courante, true);
 	int* accessible_j2 = casesAccesiblesJoueur(courante, false);
@@ -163,7 +164,8 @@ int evaluation(Position* courante, bool ordi_joueur1) {
 *  Cette version de la fonctiond d'evaluation est utilise quand
 *  on cherche les meuilleurs coefficiants pour a1, a2, ..., aN
 **/
-int evaluation(Position* courante, bool ordi_joueur1, int a1, int a2, int a3, int a4, int a5, int a6) {
+int evaluation(Position* courante, int a1, int a2, int a3, int a4, int a5, int a6) {
+	bool ordi_joueur1 = courante->ordi_joueur1;
 	int evalutation = 0;
 	int* accessible_j1 = casesAccesiblesJoueur(courante, true);
 	int* accessible_j2 = casesAccesiblesJoueur(courante, false);
@@ -277,12 +279,12 @@ int basicEvaluationMod(Position* courante) {
     return 5 * (courante->pris_joueur.main_joueur - courante->pris_ordi.main_joueur);
 }
 
-int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, int a4, int a5, int a6, bool j1) {
+int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, int a4, int a5, int a6) {
 	Position prochaine_position;
 	int valeursMinMax[NB_CASES];
 	int case_a_jouer = 1;
 	//on commence a calculer l'arbre a partir de la case jouable la plus a "petite"
-	while (!coupValide(courante, case_a_jouer, true) && case_a_jouer <= NB_CASES) {
+	while (!coupValide(courante, case_a_jouer) && case_a_jouer <= NB_CASES) {
 		case_a_jouer++;
 	}
 	//si aucune case n'est jouable -> on renvoie -1 (une erreur)
@@ -290,13 +292,13 @@ int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, 
 		return -1;
 	}
 	//on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
-	jouerCoup(&prochaine_position, courante, case_a_jouer, j1);
-	valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, false, 100, true, a1, a2, a3, a4, a5, a6);
+	jouerCoup(&prochaine_position, courante, case_a_jouer);
+	valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, 100, true, a1, a2, a3, a4, a5, a6);
 	for (int i = case_a_jouer; i < NB_CASES; i++) {
-		if (coupValide(courante, i + 1, true)) {
+		if (coupValide(courante, i + 1)) {
 			//on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
-			jouerCoup(&prochaine_position, courante, i + 1, j1);
-			valeursMinMax[i] = valeurMinMaxMod(&prochaine_position, 1, profondeur, false, 100, true, a1, a2, a3, a4, a5, a6);
+			jouerCoup(&prochaine_position, courante, i + 1);
+			valeursMinMax[i] = valeurMinMaxMod(&prochaine_position, 1, profondeur, 100, true, a1, a2, a3, a4, a5, a6);
 			//On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
 			if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
 				//on modifie la valeur de resultat le cas echeant
@@ -307,12 +309,12 @@ int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, 
 	return case_a_jouer;
 }
 
-int prochain_coup_2(Position* courante, int profondeur, bool j1) {
+int prochain_coup_2(Position* courante, int profondeur) {
 	Position prochaine_position;
 	int valeursMinMax[NB_CASES];
 	int case_a_jouer = 1;
 	//on commence a calculer l'arbre a partir de la case jouable la plus a "petite"
-	while (!coupValide(courante, case_a_jouer, true) && case_a_jouer <= NB_CASES) {
+	while (!coupValide(courante, case_a_jouer) && case_a_jouer <= NB_CASES) {
 		case_a_jouer++;
 	}
 	//si aucune case n'est jouable -> on renvoie -1 (une erreur)
@@ -320,15 +322,15 @@ int prochain_coup_2(Position* courante, int profondeur, bool j1) {
 		return -1;
 	}
 	//on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
-	jouerCoup(&prochaine_position, courante, case_a_jouer, j1);
-	valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, false, 100, false, 0, 0, 0, 0, 0, 0);
+	jouerCoup(&prochaine_position, courante, case_a_jouer);
+	valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, 100, false, 0, 0, 0, 0, 0, 0);
 	for (int i = case_a_jouer; i < NB_CASES; i++) {
-		if (coupValide(courante, i + 1, false)) {
+		if (coupValide(courante, i + 1)) {
 			//on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
-			jouerCoup(&prochaine_position, courante, i + 1, j1);
-			valeursMinMax[i] = valeurMinMaxMod(&prochaine_position, 1, profondeur, false, 100, false, 0, 0, 0, 0, 0, 0);
+			jouerCoup(&prochaine_position, courante, i + 1);
+			valeursMinMax[i] = valeurMinMaxMod(&prochaine_position, 1, profondeur, 100, false, 0, 0, 0, 0, 0, 0);
 			//On est dans le cas ou l'on calcule le coup a jouer par l'ordi donc on prend le max des valeurs minmax des fils
-			if (valeursMinMax[i] > valeursMinMax[case_a_jouer - 1]) {
+			if (valeursMinMax[i] < valeursMinMax[case_a_jouer - 1]) {
 				//on modifie la valeur de resultat le cas echeant
 				case_a_jouer = i + 1;
 			}
@@ -337,11 +339,11 @@ int prochain_coup_2(Position* courante, int profondeur, bool j1) {
 	return case_a_jouer;
 }
 
-int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, bool ordi_joueur1, int bound_a_b, bool coef, int a1, int a2, int a3, int a4, int a5, int a6) {
+int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, int bound_a_b, bool coef, int a1, int a2, int a3, int a4, int a5, int a6) {
 	Position prochaine_position;
-	int alp_bet_val = ordi_joueur1 ? -100 : 100;
+	int alp_bet_val = courante->ordi_joue ? -100 : 100;
 	int tab_valeurs[NB_CASES];
-	if (positionFinale(courante, ordi_joueur1)) {
+	if (positionFinale(courante)) {
 		if (courante->pris_ordi.main_joueur > courante->pris_joueur.main_joueur) {
 			return 40;
 		}
@@ -354,7 +356,7 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, bool
 	}
 	if (profondeur == profondeur_max) {
 		if (coef) {
-			return evaluation(courante, ordi_joueur1, a1, a2, a3, a4, a5, a6);
+			return evaluation(courante, a1, a2, a3, a4, a5, a6);
 		}
 		else {
 			return basicEvaluation(courante);
@@ -366,21 +368,21 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, bool
 		//d'alpha beta, alors l'adversaire ne devrait pas choisir ce fils donc on ne calcul pas le reste de l'arbre
 		//inversement si la valeur d'alpha beta est inf�rieure a la valeur alpha beta du pere (ie coup de l'ordi, le max des fils)
 		//on ne choisira pas cette branche donc on ne calcule pas le reste de l'arbre
-		if ((ordi_joueur1 && (alp_bet_val > bound_a_b)) || (!ordi_joueur1 && (alp_bet_val < bound_a_b))) {
+		if ((courante->ordi_joue && (alp_bet_val > bound_a_b)) || (!courante->ordi_joue && (alp_bet_val < bound_a_b))) {
 			return alp_bet_val;
 		}
-		if (coupValide(courante, i + 1, ordi_joueur1)) {
-			jouerCoup(&prochaine_position, courante, i + 1, ordi_joueur1);
+		if (coupValide(courante, i + 1)) {
+			jouerCoup(&prochaine_position, courante, i + 1);
 			// pos_next devient la position courante, et on change le joueur
-			tab_valeurs[i] = valeurMinMax(&prochaine_position, profondeur + 1, profondeur_max, !ordi_joueur1, alp_bet_val);
+			tab_valeurs[i] = valeurMinMax(&prochaine_position, profondeur + 1, profondeur_max, alp_bet_val);
 			//la valeur d'alpha beta devient le min/max de la valeur calcul�e et de la valeur alpha beta courante
 			//(min/max selon le joueur ordi ou adversaire)
-			if ((ordi_joueur1 && (alp_bet_val < tab_valeurs[i])) || (!ordi_joueur1 && (alp_bet_val > tab_valeurs[i]))) {
+			if ((courante->ordi_joue && (alp_bet_val < tab_valeurs[i])) || (!courante->ordi_joue && (alp_bet_val > tab_valeurs[i]))) {
 				alp_bet_val = tab_valeurs[i];
 			}
 		}
 		else {
-			if (ordi_joueur1) {
+			if (courante->ordi_joue) {
 				tab_valeurs[i] = -1000000;
 			}
 			else {
@@ -401,27 +403,27 @@ int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6) {
 	initGame(&position, ordi_commence);
 	int coup = 0;
 	int nbCoup = 0;
-	while (!positionFinale(&position, ordi_commence) && nbCoup < 1000) {
+	while (!positionFinale(&position) && nbCoup < 1000) {
 		if (position.ordi_joue) {
-			coup = prochain_coup_1(&position, 5, a1, a2, a3, a4, a5, a6, j1);
+			coup = prochain_coup_1(&position, 5, a1, a2, a3, a4, a5, a6);
 		}
 		else {
-			coup = prochain_coup_2(&position, 5, j1);
+			coup = prochain_coup_2(&position, 5);
 		}
-		if (!coupValide(&position, coup, ordi_commence)) {
+		if (!coupValide(&position, coup)) {
 			std::cout << "bug moteur jeux" << std::endl;
-			afficherJeux(&position, ordi_commence);
+			afficherJeux(&position);
 			std::cout << "le coup : " << coup << (position.ordi_joue && ordi_commence ? " joue par le joueur 1" : " joue par le joueur 2") << std::endl;
 			std::cout << "robot pierre : " << (ordi_commence ? " oui" : " non") << std::endl;
 			std::cout << "robot : " << ordi_commence << " tour robot :" << position.ordi_joue << std::endl;
 			exit(0);
 		}
-		jouerCoup(&positionSuivante, &position, coup, j1);
+		jouerCoup(&positionSuivante, &position, coup);
 		position = positionSuivante;
 		j1 = !j1;
 		nbCoup++;
 	}
-	int gagnant = evaluerGagnant(&position, ordi_commence);
+	int gagnant = evaluerGagnant(&position);
 	// si c'est l'ordi qui gagne (la fonction avec les parametres choisis)
 	if (gagnant == 1 && ordi_commence) {
 		return 1;

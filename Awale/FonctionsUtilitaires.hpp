@@ -16,13 +16,13 @@
 #include "StructureDonnee.hpp"
 #include "Evaluation.hpp"
 
-bool positionFinale(Position *courante, bool ordi_joueur1);
-bool coupValide(Position *courante, int i, bool ordi_joueur1);
-void jouerCoup(Position* suivant, Position* courante, int case_a_jouer, bool joueur1);
-bool estLeJoueur1(Position *courante, bool ordi_commence);
-int valeurMinMax(Position *courante, int profondeur, int profondeur_max, bool ordi_joueur1, int bound_a_b);
+bool positionFinale(Position *courante);
+bool coupValide(Position *courante, int i);
+void jouerCoup(Position* suivant, Position* courante, int case_a_jouer);
+bool estLeJoueur1(Position *courante);
+int valeurMinMax(Position *courante, int profondeur, int profondeur_max, int bound_a_b);
 void initGame(Position *courant, bool ordi_commence);
-int evaluerGagnant(Position *position, bool ordi_j1);
-void afficherJeux(Position *courante, bool ordi_commence);
+int evaluerGagnant(Position *position);
+void afficherJeux(Position *courante);
 
 #endif /* FonctionsUtilitaires_hpp */
