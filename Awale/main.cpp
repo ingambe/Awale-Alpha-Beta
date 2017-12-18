@@ -1,4 +1,4 @@
-﻿//
+//
 //  main.cpp
 //  Awale
 //
@@ -47,7 +47,7 @@ int prochain_coup(Position* courante, int profondeur) {
 }
 
 int main(int argc, const char * argv[]) {
-	if (!true) {
+	if (true) {
 		determinerCoeff();
 	}
 	else {
