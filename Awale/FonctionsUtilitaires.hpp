@@ -3,7 +3,7 @@
 //  Awale
 //
 //  Created by Pierre TASSEL on 17/12/2017.
-//  Copyright Â© 2017 Pierre TASSEL. All rights reserved.
+//  Copyright © 2017 Pierre TASSEL. All rights reserved.
 //
 
 #ifndef FonctionsUtilitaires_hpp
