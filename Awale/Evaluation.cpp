@@ -435,10 +435,11 @@ int evaluation(Position* courante, int a1, int a2, int a3, int a4, int a5, int a
 	return evalutation;
 }
 
+/**
 int basicEvaluation(Position* courante) {
 	return 5 * (courante->pris_ordi.main_joueur - courante->pris_joueur.main_joueur);
 }
-
+**/
 int basicEvaluationMod(Position* courante) {
     return 5 * (courante->pris_joueur.main_joueur - courante->pris_ordi.main_joueur);
 }
@@ -508,11 +509,11 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, int 
 	int tab_valeurs[NB_CASES];
 	if (positionFinale(courante)) {
 		if (courante->pris_ordi.main_joueur > courante->pris_joueur.main_joueur) {
-			return 40;
+			return 40000000;
 		}
 		else {
 			if (courante->pris_ordi.main_joueur < courante->pris_joueur.main_joueur) {
-				return -40;
+				return -40000000;
 			}
 			return 0;
 		}
@@ -522,7 +523,7 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, int 
 			return evaluation(courante, a1, a2, a3, a4, a5, a6, a7, a8);
 		}
 		else {
-			return basicEvaluation(courante);
+			return basicEvaluationMod(courante);
 		}
 	}
 	for (int i = 0; i < NB_CASES; i++) {
