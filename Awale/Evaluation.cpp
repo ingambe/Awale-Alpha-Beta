@@ -412,7 +412,7 @@ int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6){
         j1 = !j1;
         nbCoup++;
     }
-    if(i == 1000){
+    if(nbCoup == 1000){
         return 0;
     }
     int gagnant = evaluerGagnant(&position, ordi_commence);
