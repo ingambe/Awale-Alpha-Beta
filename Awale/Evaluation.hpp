@@ -17,7 +17,7 @@
 #include <time.h>
 #include <iostream>
 
-int* casesAccesibleAdversaire(Position* courante, bool joueur1);
+int* casesAccesiblesJoueur(Position* courante, bool joueur1);
 int nbTrouAdversairePeutUtiliser(Position* courante, int nombre_cailloux_trou);
 int evaluation(Position* courante);
 int basicEvaluation(Position* courante);

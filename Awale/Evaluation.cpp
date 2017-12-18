@@ -12,19 +12,27 @@
 *  Renvoi les cases accesible pour un joueur donne
 *  @bool joueur1 : cases accessible par le joueur 1
 **/
-int* casesAccesiblesJoueur(Position* courante, bool joueur1) {
-	int* cases_accessibles = new int[NB_CASES];
-	if (joueur1) {
-		for (int i = 0; i < NB_CASES; i++) {
-			cases_accessibles[i] = courante->cases_jeux[i + courante->cases_jeux[i].case_joueur].case_joueur % (2 * NB_CASES);
-		}
-	}
-	else {
-		for (int i = NB_CASES; i < 2 * NB_CASES; i++) {
-			cases_accessibles[i - NB_CASES] = courante->cases_jeux[i + courante->cases_jeux[i].case_joueur].case_joueur % (2 * NB_CASES);
-		}
-	}
-	return cases_accessibles;
+int* casesAccesiblesJoueur(Position* courante, bool joueur1){
+    int* cases_accessibles = new int[NB_CASES];
+    if (joueur1) {
+        for(int i = 0; i < NB_CASES; i++){
+            cases_accessibles[i] = (i + courante->cases_jeux[i].case_joueur) % (2 * NB_CASES);
+        }
+    } else {
+        for(int i = (2 * NB_CASES - 1); i >= NB_CASES; i--){
+            if((i - courante->cases_jeux[i - NB_CASES].case_joueur) % (2 * NB_CASES) >= 0){
+                cases_accessibles[i - NB_CASES] = (i - courante->cases_jeux[i - NB_CASES].case_joueur) % (2 * NB_CASES);
+            }
+            else {
+                int k = (i - courante->cases_jeux[i - NB_CASES].case_joueur) % (2 * NB_CASES);
+                while (k < 0) {
+                    k += (2 * NB_CASES);
+                }
+                cases_accessibles[i - NB_CASES] = k;
+            }
+        }
+    }
+    return cases_accessibles;
 }
 
 /**
@@ -439,13 +447,13 @@ void determinerCoeff() {
 	int maximum = 0;
 	int resultat = 0;
 	for (int a1 = -40; a1 <= 40; a1++) {
-		for (int a2 = -40; a1 <= 40; a1++) {
-			for (int a3 = -40; a1 <= 40; a1++) {
-				for (int a4 = -40; a1 <= 40; a1++) {
-					for (int a5 = -40; a1 <= 40; a1++) {
-						for (int a6 = -40; a1 <= 40; a1++) {
+		for (int a2 = -40; a2 <= 40; a2++) {
+			for (int a3 = -40; a3 <= 40; a3++) {
+				for (int a4 = -40; a4 <= 40; a4++) {
+					for (int a5 = -40; a5 <= 40; a5++) {
+						for (int a6 = -40; a6 <= 40; a6++) {
 							resultat = 0;
-							for (int i = 0; i < 50; i++) {
+							for (int i = 0; i < 30; i++) {
 								resultat += jouerPartieDeuxRobot(a1, a2, a3, a4, a5, a6);
 							}
 							if (resultat > maximum) {
