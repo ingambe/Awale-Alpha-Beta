@@ -460,7 +460,7 @@ void determinerCoeff() {
                                 for (int i = 0; i < 20; i++) {
                                     resultat += jouerPartieDeuxRobot(a1, a2, a3, a4, a5, a6, a7);
                                 }
-                                if (resultat > maximum) {
+                                if (resultat >= maximum) {
                                     maximum = resultat;
                                     coeff[0] = a1;
                                     coeff[1] = a2;
