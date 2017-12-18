@@ -162,7 +162,7 @@ int valeurMinMax(Position *courante, int profondeur, int profondeur_max, int bou
 	int alp_bet_val = courante->ordi_joue ? -100 : 100;
 	int tab_valeurs[NB_CASES];
 	bool ordi_joueur1 = courante->ordi_joueur1;
-	if (positionFinale(courante, ordi_joueur1)) {
+	if (positionFinale(courante)) {
 		if (courante->pris_ordi.main_joueur > courante->pris_joueur.main_joueur) {
 			return 40;
 		}
@@ -174,7 +174,7 @@ int valeurMinMax(Position *courante, int profondeur, int profondeur_max, int bou
 		}
 	}
 	if (profondeur == profondeur_max) {
-		return evaluation(courante, ordi_joueur1);
+		return evaluation(courante);
 	}
 	for (int i = 0; i < NB_CASES; i++) {
 		//si on calcule le coup de l'ordinateur (ie on prend le max) mais que la valeur d'alpha beta du pere
@@ -185,10 +185,10 @@ int valeurMinMax(Position *courante, int profondeur, int profondeur_max, int bou
 		if ((courante->ordi_joue && (alp_bet_val > bound_a_b)) || (!courante->ordi_joue && (alp_bet_val < bound_a_b))) {
 			return alp_bet_val;
 		}
-		if (coupValide(courante, i + 1, ordi_joueur1)) {
-			jouerCoup(&prochaine_position, courante, i + 1, ordi_joueur1);
+		if (coupValide(courante, i + 1)) {
+			jouerCoup(&prochaine_position, courante, i + 1);
 			// pos_next devient la position courante
-			tab_valeurs[i] = valeurMinMax(&prochaine_position, profondeur + 1, profondeur_max, ordi_joueur1, alp_bet_val);
+			tab_valeurs[i] = valeurMinMax(&prochaine_position, profondeur + 1, profondeur_max, alp_bet_val);
 			//la valeur d'alpha beta devient le min/max de la valeur calculÈe et de la valeur alpha beta courante
 			//(min/max selon le joueur ordi ou adversaire)
 			if ((courante->ordi_joue && (alp_bet_val < tab_valeurs[i])) || (!courante->ordi_joue && (alp_bet_val > tab_valeurs[i]))) {
