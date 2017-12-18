@@ -405,7 +405,7 @@ int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6){
             std::cout << "le coup : " << coup << (position.ordi_joue && ordi_commence ? " joue par le joueur 1" : " joue par le joueur 2") << std::endl;
             std::cout << "robot pierre : " << (ordi_commence ? " oui" : " non") << std::endl;
             std::cout << "robot : " << ordi_commence << " tour robot :" << position.ordi_joue << std::endl;
-            exit(0);
+            //exit(0);
         }
         jouerCoup(&positionSuivante, &position, coup, j1);
         position = positionSuivante;
@@ -429,14 +429,14 @@ void determinerCoeff(){
     int coeff[6];
     int maximum = 0;
     int resultat = 0;
-    for(int a1 = -10; a1 <= 10; a1++){
-        for(int a2 = -10; a1 <= 10; a1++){
-            for(int a3 = -10; a1 <= 10; a1++){
-                for(int a4 = -10; a1 <= 10; a1++){
-                    for(int a5 = -10; a1 <= 10; a1++){
-                        for(int a6 = -10; a1 <= 10; a1++){
+    for(int a1 = -40; a1 <= 40; a1++){
+        for(int a2 = -40; a2 <= 40; a2++){
+            for(int a3 = -40; a3 <= 40; a3++){
+                for(int a4 = -40; a4 <= 40; a4++){
+                    for(int a5 = -40; a5 <= 40; a5++){
+                        for(int a6 = -40; a6 <= 40; a6++){
                             resultat = 0;
-                            for(int i = 0; i < 20; i++){
+                            for(int i = 0; i < 30; i++){
                                 resultat += jouerPartieDeuxRobot(a1, a2, a3, a4, a5, a6);
                             }
                             if(resultat > maximum){
