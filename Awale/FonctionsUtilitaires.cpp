@@ -19,7 +19,7 @@ void afficherJeux(Position *courante) {
 	for (int i = 0; i < NB_CASES; i++) {
 		std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
 	}
-	if (!ordi_commence) {
+	if (ordi_commence) {
 		std::cout << "      score : " << courante->pris_ordi.main_joueur << std::endl;
 	}
 	else {
@@ -29,7 +29,7 @@ void afficherJeux(Position *courante) {
 	for (int i = (2 * NB_CASES) - 1; i >= NB_CASES; i--) {
 		std::cout << "| " << courante->cases_jeux[i].case_joueur << " | ";
 	}
-	if (!ordi_commence) {
+	if (ordi_commence) {
 		std::cout << "      score : " << courante->pris_joueur.main_joueur << std::endl;
 	}
 	else {
