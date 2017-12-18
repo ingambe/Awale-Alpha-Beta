@@ -66,6 +66,7 @@ int evaluation(Position* courante) {
 	int a4 = 93;
 	int a5 = 13;
 	int a6 = 87;
+    int a7 = 100;
 	// permettra de calculer le nombre de puis permettant d'acceder au cote adverse
 	int nombrePuits = 0;
 	if (ordi_joueur1 && courante->ordi_joue) {
@@ -157,6 +158,8 @@ int evaluation(Position* courante) {
 		}
 		evalutation += a6 * nombrePuits;
 	}
+    // difference au niveau des points des joueurs
+    evalutation += a7 * (courante->pris_ordi.main_joueur - courante->pris_joueur.main_joueur);
 	if (accessible_j1 != NULL) {
 		delete accessible_j1;
 	}
