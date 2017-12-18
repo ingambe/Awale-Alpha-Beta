@@ -25,4 +25,5 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, bool
 void determinerCoeff();
 int prochain_coup_2(Position* courante, int profondeur, bool j1);
 int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, int a4, int a5, int a6, bool j1);
+int basicEvaluationMod(Position* courante);
 #endif /* Evaluation_hpp */

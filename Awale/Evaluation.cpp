@@ -266,6 +266,10 @@ int basicEvaluation(Position* courante) {
     return 5 * (courante->pris_ordi.main_joueur - courante->pris_joueur.main_joueur);
 }
 
+int basicEvaluationMod(Position* courante) {
+    return 5 * (courante->pris_joueur.main_joueur - courante->pris_ordi.main_joueur);
+}
+
 int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, int a4, int a5, int a6, bool j1) {
     Position prochaine_position;
     int valeursMinMax[NB_CASES];
@@ -345,7 +349,7 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, bool
         if(coef){
             return evaluation(courante, ordi_joueur1, a1, a2, a3, a4, a5, a6);
         } else {
-            return basicEvaluation(courante);
+            return basicEvaluationMod(courante);
         }
     }
     for (int i = 0; i < NB_CASES; i++) {
@@ -408,6 +412,9 @@ int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6){
         j1 = !j1;
         nbCoup++;
     }
+    if(i == 1000){
+        return 0;
+    }
     int gagnant = evaluerGagnant(&position, ordi_commence);
     // si c'est l'ordi qui gagne (la fonction avec les parametres choisis)
     if(gagnant == 1 && ordi_commence){
@@ -422,14 +429,14 @@ void determinerCoeff(){
     int coeff[6];
     int maximum = 0;
     int resultat = 0;
-    for(int a1 = -40; a1 <= 40; a1++){
-        for(int a2 = -40; a1 <= 40; a1++){
-            for(int a3 = -40; a1 <= 40; a1++){
-                for(int a4 = -40; a1 <= 40; a1++){
-                    for(int a5 = -40; a1 <= 40; a1++){
-                        for(int a6 = -40; a1 <= 40; a1++){
+    for(int a1 = -10; a1 <= 10; a1++){
+        for(int a2 = -10; a1 <= 10; a1++){
+            for(int a3 = -10; a1 <= 10; a1++){
+                for(int a4 = -10; a1 <= 10; a1++){
+                    for(int a5 = -10; a1 <= 10; a1++){
+                        for(int a6 = -10; a1 <= 10; a1++){
                             resultat = 0;
-                            for(int i = 0; i < 50; i++){
+                            for(int i = 0; i < 20; i++){
                                 resultat += jouerPartieDeuxRobot(a1, a2, a3, a4, a5, a6);
                             }
                             if(resultat > maximum){
