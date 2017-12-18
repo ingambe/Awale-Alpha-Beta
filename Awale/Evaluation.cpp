@@ -305,7 +305,8 @@ int prochain_coup_1(Position* courante, int profondeur, int a1, int a2, int a3, 
 	}
 	//on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
 	jouerCoup(&prochaine_position, courante, case_a_jouer);
-    valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, -100, true, a1, a2, a3, a4, a5, a6, a7);	for (int i = case_a_jouer; i < NB_CASES; i++) {
+    valeursMinMax[case_a_jouer - 1] = valeurMinMaxMod(&prochaine_position, 1, profondeur, -100, true, a1, a2, a3, a4, a5, a6, a7);
+    for (int i = case_a_jouer; i < NB_CASES; i++) {
 		if (coupValide(courante, i + 1)) {
 			//on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables
 			jouerCoup(&prochaine_position, courante, i + 1);
@@ -384,7 +385,7 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, int 
 		if (coupValide(courante, i + 1)) {
 			jouerCoup(&prochaine_position, courante, i + 1);
 			// pos_next devient la position courante, et on change le joueur
-			tab_valeurs[i] = valeurMinMax(&prochaine_position, profondeur + 1, profondeur_max, alp_bet_val);
+            tab_valeurs[i] = valeurMinMaxMod(&prochaine_position, profondeur + 1, profondeur_max, alp_bet_val, coef, a1, a2 ,a3 ,a4,a5,a6,a7);
 			//la valeur d'alpha beta devient le min/max de la valeur calcul�e et de la valeur alpha beta courante
 			//(min/max selon le joueur ordi ou adversaire)
 			if ((courante->ordi_joue && (alp_bet_val < tab_valeurs[i])) || (!courante->ordi_joue && (alp_bet_val > tab_valeurs[i]))) {
