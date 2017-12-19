@@ -123,9 +123,11 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer) {
 		if (case_courante == i) {
 			case_courante++;
 		}
-		suivant->cases_jeux[case_courante].case_joueur++;
-		case_courante++;
-		main--;
+		else {
+			suivant->cases_jeux[case_courante].case_joueur++;
+			case_courante++;
+			main--;
+		}
 	}
 	case_courante = (case_courante - 1) % (NB_CASES * 2);
 	//si c'est au joueur 1 de jouer on ne regarde que les puits du joueur2 
