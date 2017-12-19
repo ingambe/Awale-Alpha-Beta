@@ -46,7 +46,7 @@ bool positionFinale(Position *courante) {
 	bool ordi_joueur1 = courante->ordi_joueur1;
 	//on regarde s'il reste des puits non vide au joueur courant
 	int somme = 0;
-	if (courante->pris_ordi.main_joueur >= (8 * NB_CASES) || courante->pris_joueur.main_joueur >= (8 * NB_CASES)) {
+	if (courante->pris_ordi.main_joueur >= ((4 * NB_CASES) + 1) || courante->pris_joueur.main_joueur >= ((4 * NB_CASES) + 1)) {
 		return true;
 	}
 	else {
