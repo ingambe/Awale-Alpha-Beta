@@ -46,6 +46,7 @@ bool positionFinale(Position *courante) {
 	bool ordi_joueur1 = courante->ordi_joueur1;
 	//on regarde s'il reste des puits non vide au joueur courant
 	int somme = 0;
+	int nbCaillouxAdverse = 0;
 	if (courante->pris_ordi.main_joueur >= ((4 * NB_CASES) + 1) || courante->pris_joueur.main_joueur >= ((4 * NB_CASES) + 1)) {
 		return true;
 	}
@@ -53,25 +54,38 @@ bool positionFinale(Position *courante) {
 		if (courante->ordi_joue && ordi_joueur1) {
 			for (int i = 0; i < NB_CASES; i++) {
 				somme += courante->cases_jeux[i].case_joueur;
+				nbCaillouxAdverse += courante->cases_jeux[i + NB_CASES].case_joueur;
 			}
 		}
 		else if (courante->ordi_joue && !ordi_joueur1) {
 			for (int i = NB_CASES; i < 2 * NB_CASES; i++) {
 				somme += courante->cases_jeux[i].case_joueur;
+				nbCaillouxAdverse += courante->cases_jeux[i - NB_CASES].case_joueur;
 			}
 		}
 		else if (!courante->ordi_joue && ordi_joueur1) {
 			for (int i = NB_CASES; i < 2 * NB_CASES; i++) {
 				somme += courante->cases_jeux[i].case_joueur;
+				nbCaillouxAdverse += courante->cases_jeux[i - NB_CASES].case_joueur;
 			}
 		}
 		else {
 			for (int i = 0; i < NB_CASES; i++) {
 				somme += courante->cases_jeux[i].case_joueur;
+				nbCaillouxAdverse += courante->cases_jeux[i + NB_CASES].case_joueur;
 			}
 		}
 	}
-	return somme == 0;
+	if (somme == 0) {
+		if (courante->ordi_joue) {
+			courante->pris_ordi.main_joueur += nbCaillouxAdverse;
+		}
+		else {
+			courante->pris_joueur.main_joueur += nbCaillouxAdverse;
+		}
+		return true;
+	}
+	return false;
 }
 
 bool coupValide(Position *courante, int i) {
@@ -157,36 +171,6 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer) {
 		}
 	}
     suivant->ordi_joue = !courante->ordi_joue;
-    // on check si l'adversaire a encore des cailloux
-    int nbCaillouxTerrain = 0;
-    // si on est le joueur 2
-    if ((courante->ordi_joue && !joueur1) || (!courante->ordi_joue && joueur1)) {
-        for(int i = 0; i < NB_CASES; i++){
-            if(courante->cases_jeux[i].case_joueur > 0){
-                return;
-            } else {
-                nbCaillouxTerrain += courante->cases_jeux[i].case_joueur;
-            }
-        }
-        if(courante->ordi_joue){
-            courante->pris_ordi.main_joueur += nbCaillouxTerrain;
-        } else {
-            courante->pris_joueur.main_joueur += nbCaillouxTerrain;
-        }
-    } else {
-        for(int i = NB_CASES; i < (2 * NB_CASES); i++){
-            if(courante->cases_jeux[i].case_joueur > 0){
-                return;
-            } else {
-                nbCaillouxTerrain += courante->cases_jeux[i].case_joueur;
-            }
-        }
-        if(courante->ordi_joue){
-            courante->pris_ordi.main_joueur += nbCaillouxTerrain;
-        } else {
-            courante->pris_joueur.main_joueur += nbCaillouxTerrain;
-        }
-    }
 }
 
 int valeurMinMax(Position *courante, int profondeur, int profondeur_max, int bound_a_b) {

@@ -59,7 +59,7 @@ int main(int argc, const char * argv[]) {
 		int coup = 0;
 		while (!positionFinale(&position)) {
 			if (position.ordi_joue) {
-				coup = prochain_coup(&position, 1);
+				coup = prochain_coup(&position, 8);
 				std::cout << "L'ordinateur a joue : " << coup << std::endl;
 			}
 			else {
@@ -75,8 +75,8 @@ int main(int argc, const char * argv[]) {
 			afficherJeux(&position);
 		}
 		int gagnant = evaluerGagnant(&position);
-		std::cout << "Le jeu est terminé le gagnant est le joueur :" << gagnant << (((position.ordi_joueur1 && gagnant == 1) || (!position.ordi_joueur1 && gagnant == 2)) ? "(l'IA)" : "(l'adversaire)") << std::endl;
-		system("wait");
+		std::cout << "Le jeu est termine le gagnant est le joueur :" << gagnant << (((position.ordi_joueur1 && gagnant == 1) || (!position.ordi_joueur1 && gagnant == 2)) ? "(l'IA)" : "(l'adversaire)") << std::endl;
+		std::cin >> gagnant;
 	}
 	return 0;
 }

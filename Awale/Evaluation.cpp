@@ -44,6 +44,16 @@ int* casesAccesiblesJoueur(Position* courante, bool joueur1){
     return cases_accessibles;
 }
 
+int* caseAtteignable(Position* position) {
+	int* res = new int[NB_CASES * 2];
+	for (int i = 0; i < 2 * NB_CASES; i++) {
+		//la case atteignable est celle qui se trouve a N places plus loin (N = nombre de cailloux) + le nombre de saut de la case de départ
+		//(ie le quotient du nombre de cailloux par le nombre de cases total)
+		res[i] = i + position->cases_jeux[i].case_joueur + (int)((position->cases_jeux[i].case_joueur) / (NB_CASES * 2));
+	}
+	return res;
+}
+
 /**
 * Retourne le nombre de case possedant @nombre_cailloux_trou que l'on peut acceder a partir de @cases_accessible
 **/
@@ -68,9 +78,10 @@ int nbTrouPeutUtiliser(Position* courante, int* cases_accessible, int nombre_cai
 int evaluation(Position* courante) {
     bool ordi_joueur1 = courante->ordi_joueur1;
     int evalutation = 0;
-    int* accessible_j1 = casesAccesiblesJoueur(courante, true);
-    int* accessible_j2 = casesAccesiblesJoueur(courante, false);
-    if (ordi_joueur1 && courante->ordi_joue) {
+    /*int* accessible_j1 = casesAccesiblesJoueur(courante, true);
+    int* accessible_j2 = casesAccesiblesJoueur(courante, false);*/
+	int* casesAccessibles = caseAtteignable(courante);
+    if (ordi_joueur1) {
         // cas ou l'ordi est le joueur 1 et nous somme le joueur 1
         int compteur_case3 = 0;
         int compteur_case2 = 0;
@@ -84,19 +95,19 @@ int evaluation(Position* courante) {
             // -1 car pour capturer il faut poser un cailloux
             // rajout condition (i != *(cases_accessible + i) || i >= (2 * NB_CASES)) car casesAccesiblesJoueur renvoit la case courante si il y a 0 cailloux dedans
             // donc si on peut acceder a notre case il faut que l'on puisse faire un tour complet
-            if (courante->cases_jeux[*(accessible_j2 + i)].case_joueur == 2 && (i != *(accessible_j2 + i) || i >= (2 * NB_CASES))) {
+            if ((courante->cases_jeux[*(casesAccessibles + i + NB_CASES)].case_joueur + (int)(courante->cases_jeux[i + NB_CASES].case_joueur / (NB_CASES * 2))) == 2) {
                 compteur_case3++;
             }
-            if (courante->cases_jeux[*(accessible_j2 + i)].case_joueur == 0 && (i != *(accessible_j2 + i) || i >= (2 * NB_CASES))) {
+            if ((courante->cases_jeux[*(casesAccessibles + i + NB_CASES)].case_joueur + (int)(courante->cases_jeux[i + NB_CASES].case_joueur / (NB_CASES * 2))) == 1) {
                 compteur_case2++;
             }
             if(courante->cases_jeux[i].case_joueur == 0){
                 compteurTrouVide++;
             }
-            if(*(accessible_j1 + i) >= NB_CASES){
+            if(*(casesAccessibles + i) >= NB_CASES){
                 compteurCasesAccessiblesAdversaire++;
             }
-            if(*(accessible_j2 + i) < NB_CASES){
+            if(*(casesAccessibles + i + NB_CASES) < NB_CASES){
                 compteurCasesAccessibles++;
             }
             if(courante->cases_jeux[i].case_joueur > (2 * NB_CASES)){
@@ -112,7 +123,7 @@ int evaluation(Position* courante) {
         evalutation += A7 * compteurCasesAccessiblesAdversaire;
         evalutation += A8 * plusDeVingCailloux;
     }
-    else if (!ordi_joueur1 && courante->ordi_joue) {
+    else if (!ordi_joueur1) {
         // cas ou l'ordi est le joueur 2 et nous somme le joueur 2
         int compteur_case3 = 0;
         int compteur_case2 = 0;
@@ -126,19 +137,19 @@ int evaluation(Position* courante) {
             // -1 car pour capturer il faut poser un cailloux
             // rajout condition (i != *(cases_accessible + i) || i >= (2 * NB_CASES)) car casesAccesiblesJoueur renvoit la case courante si il y a 0 cailloux dedans
             // donc si on peut acceder a notre case il faut que l'on puisse faire un tour complet
-            if (courante->cases_jeux[*(accessible_j1 + i) + NB_CASES].case_joueur == 2 && (i + NB_CASES != *(accessible_j1 + i) || i >= (2 * NB_CASES))) {
+            if ((courante->cases_jeux[*(casesAccessibles + i)].case_joueur + (int)(courante->cases_jeux[i].case_joueur / (NB_CASES * 2))) == 2) {
                 compteur_case3++;
             }
-            if (courante->cases_jeux[*(accessible_j1 + i) + NB_CASES].case_joueur == 0 && (i + NB_CASES != *(accessible_j1 + i) || i >= (2 * NB_CASES))) {
+            if ((courante->cases_jeux[*(casesAccessibles + i)].case_joueur + (int)(courante->cases_jeux[i].case_joueur / (NB_CASES * 2))) == 1) {
                 compteur_case2++;
             }
             if(courante->cases_jeux[i + NB_CASES].case_joueur == 0){
                 compteurTrouVide++;
             }
-            if(*(accessible_j1 + i) >= NB_CASES){
+            if(*(casesAccessibles + i) >= NB_CASES){
                 compteurCasesAccessibles++;
             }
-            if(*(accessible_j2 + i) < NB_CASES){
+            if(*(casesAccessibles + i + NB_CASES) < NB_CASES){
                 compteurCasesAccessiblesAdversaire++;
             }
             if(courante->cases_jeux[i + NB_CASES].case_joueur > (2 * NB_CASES)){
@@ -154,7 +165,7 @@ int evaluation(Position* courante) {
         evalutation += A7 * compteurCasesAccessiblesAdversaire;
         evalutation += A8 * plusDeVingCailloux;
     }
-    else if (ordi_joueur1 && !courante->ordi_joue) {
+   /*else if (ordi_joueur1 && !courante->ordi_joue) {
         // cas ou l'ordi est le joueur 1 et nous somme le joueur 2
         int compteur_case3 = 0;
         int compteur_case2 = 0;
@@ -237,15 +248,19 @@ int evaluation(Position* courante) {
         evalutation += A6 * courante->pris_ordi.main_joueur;
         evalutation += A7 * compteurCasesAccessiblesAdversaire;
         evalutation += A8 * plusDeVingCailloux;
-    }
-    if (accessible_j1 != NULL) {
+    }*/
+    /*if (accessible_j1 != NULL) {
         delete accessible_j1;
     }
     accessible_j1 = NULL;
     if (accessible_j2 != NULL) {
         delete accessible_j2;
     }
-    accessible_j2 = NULL;
+    accessible_j2 = NULL;*/
+	if (casesAccessibles != NULL) {
+		delete casesAccessibles;
+	}
+	casesAccessibles = NULL;
     return evalutation;
 }
 
