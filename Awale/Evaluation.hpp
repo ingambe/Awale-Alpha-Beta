@@ -8,8 +8,8 @@
 
 #ifndef Evaluation_hpp
 #define Evaluation_hpp
-#define NB_CASES 10
 
+#include "Define.hpp"
 #include <stdio.h>
 #include "StructureDonnee.hpp"
 #include "FonctionsUtilitaires.hpp"

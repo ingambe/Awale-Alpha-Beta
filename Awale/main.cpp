@@ -5,9 +5,7 @@
 //  Created by Pierre TASSEL on 14/12/2017.
 //  Copyright � 2017 Pierre TASSEL. All rights reserved.
 //
-#define LOG_MAX_CAILLOUX 8
-#define LOG_MAX_CAILLOUX_MAIN 6
-#define NB_CASES 10
+#include "Define.hpp"
 #include <iostream>
 #include <bitset>
 #include <stdio.h>

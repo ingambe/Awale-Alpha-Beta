@@ -9,9 +9,7 @@
 #ifndef FonctionsUtilitaires_hpp
 #define FonctionsUtilitaires_hpp
 
-#define LOG_MAX_CAILLOUX 8
-#define LOG_MAX_CAILLOUX_MAIN 6
-#define NB_CASES 10
+#include "Define.hpp"
 #include <stdio.h>
 #include "StructureDonnee.hpp"
 #include "Evaluation.hpp"

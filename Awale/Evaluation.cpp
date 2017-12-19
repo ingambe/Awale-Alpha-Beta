@@ -7,6 +7,7 @@
 //
 
 #include "Evaluation.hpp"
+#include "Define.hpp"
 #define A1 -100
 #define A2 93
 #define A3 -87

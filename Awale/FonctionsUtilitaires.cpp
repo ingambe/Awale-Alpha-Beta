@@ -76,7 +76,7 @@ bool positionFinale(Position *courante) {
 
 bool coupValide(Position *courante, int i) {
 	bool ordi_joueur1 = courante->ordi_joueur1;
-	if ((i - 1) < 0 || (i - 1) > NB_CASES) {
+	if ((i - 1) < 0 || (i - 1) >= NB_CASES) {
 		return false;
 	}
 	if (ordi_joueur1 && courante->ordi_joue) {
