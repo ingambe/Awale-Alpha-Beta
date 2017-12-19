@@ -28,7 +28,7 @@ int prochain_coup(Position* courante, int profondeur) {
 	}
 	//on initialise le resultat en calculant la valeur minmax du sous arbre a partir du coup de base
 	jouerCoup(&prochaine_position, courante, case_a_jouer);
-	valeursMinMax[case_a_jouer - 1] = valeurMinMax(&prochaine_position, 1, profondeur, -100);
+	valeursMinMax[case_a_jouer - 1] = valeurMinMax(&prochaine_position, 1, profondeur, -1000000);
 	for (int i = case_a_jouer; i < NB_CASES; i++) {
 		if (coupValide(courante, i + 1)) {
 			//on calcule donc tous les sous arbres correspondants a chaque coups qui sont jouables

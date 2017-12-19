@@ -191,16 +191,16 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer) {
 
 int valeurMinMax(Position *courante, int profondeur, int profondeur_max, int bound_a_b) {
 	Position prochaine_position;
-	int alp_bet_val = courante->ordi_joue ? -100 : 100;
+	int alp_bet_val = courante->ordi_joue ? -1000000 : 1000000;
 	int tab_valeurs[NB_CASES];
 	bool ordi_joueur1 = courante->ordi_joueur1;
 	if (positionFinale(courante)) {
 		if (courante->pris_ordi.main_joueur > courante->pris_joueur.main_joueur) {
-			return 40;
+			return (40000 * (profondeur_max - profondeur));
 		}
 		else {
 			if (courante->pris_ordi.main_joueur < courante->pris_joueur.main_joueur) {
-				return -40;
+				return -(40000 * (profondeur_max - profondeur));
 			}
 			return 0;
 		}
