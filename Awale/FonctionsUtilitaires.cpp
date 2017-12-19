@@ -154,7 +154,37 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer) {
 			case_courante--;
 		}
 	}
-	suivant->ordi_joue = !courante->ordi_joue;
+    suivant->ordi_joue = !courante->ordi_joue;
+    // on check si l'adversaire a encore des cailloux
+    int nbCaillouxTerrain = 0;
+    // si on est le joueur 2
+    if ((courante->ordi_joue && !joueur1) || (!courante->ordi_joue && joueur1)) {
+        for(int i = 0; i < NB_CASES; i++){
+            if(courante->cases_jeux[i].case_joueur > 0){
+                return;
+            } else {
+                nbCaillouxTerrain += courante->cases_jeux[i].case_joueur;
+            }
+        }
+        if(courante->ordi_joue){
+            courante->pris_ordi.main_joueur += nbCaillouxTerrain;
+        } else {
+            courante->pris_joueur.main_joueur += nbCaillouxTerrain;
+        }
+    } else {
+        for(int i = NB_CASES; i < (2 * NB_CASES); i++){
+            if(courante->cases_jeux[i].case_joueur > 0){
+                return;
+            } else {
+                nbCaillouxTerrain += courante->cases_jeux[i].case_joueur;
+            }
+        }
+        if(courante->ordi_joue){
+            courante->pris_ordi.main_joueur += nbCaillouxTerrain;
+        } else {
+            courante->pris_joueur.main_joueur += nbCaillouxTerrain;
+        }
+    }
 }
 
 int valeurMinMax(Position *courante, int profondeur, int profondeur_max, int bound_a_b) {

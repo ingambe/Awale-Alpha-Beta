@@ -61,7 +61,7 @@ int main(int argc, const char * argv[]) {
 		int coup = 0;
 		while (!positionFinale(&position)) {
 			if (position.ordi_joue) {
-				coup = prochain_coup(&position, 5);
+				coup = prochain_coup(&position, 7);
 				std::cout << "L'ordinateur a joue : " << coup << std::endl;
 			}
 			else {
