@@ -311,7 +311,7 @@ int valeurMinMaxMod(Position *courante, int profondeur, int profondeur_max, int 
 }
 
 int jouerPartieDeuxRobot(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8) {
-    srand((int)time(NULL));
+    srand((unsigned int) time(NULL));
     Position position;
     Position positionSuivante;
     bool ordi_commence = true;
