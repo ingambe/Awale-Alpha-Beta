@@ -3,16 +3,16 @@
 //  Awale
 //
 //  Created by Pierre TASSEL on 17/12/2017.
-//  Copyright © 2017 Pierre TASSEL. All rights reserved.
+//  Copyright ï¿½ 2017 Pierre TASSEL. All rights reserved.
 //
 
 #ifndef FonctionsUtilitaires_hpp
 #define FonctionsUtilitaires_hpp
 
-#include "Define.hpp"
 #include <stdio.h>
 #include "StructureDonnee.hpp"
 #include "Evaluation.hpp"
+#include "Define.hpp"
 
 bool positionFinale(Position *courante);
 bool coupValide(Position *courante, int i);

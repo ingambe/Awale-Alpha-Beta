@@ -5,7 +5,6 @@
 //  Created by Pierre TASSEL on 14/12/2017.
 //  Copyright � 2017 Pierre TASSEL. All rights reserved.
 //
-#include "Define.hpp"
 #include <iostream>
 #include <bitset>
 #include <stdio.h>
@@ -13,6 +12,8 @@
 #include "StructureDonnee.hpp"
 #include "Evaluation.hpp"
 #include "FonctionsUtilitaires.hpp"
+#include "TestGenerationCoefficient.hpp"
+#include "Define.hpp"
 
 int prochain_coup(Position* courante, int profondeur) {
 	Position prochaine_position;
@@ -45,10 +46,14 @@ int prochain_coup(Position* courante, int profondeur) {
 }
 
 int main(int argc, const char * argv[]) {
-	if (!true) {
+	if (argc > 1) {
+        // si on appel depuis la ligne de commande avec un argument en plus alors
+        // on lance l'appel a la fonction qui cherche les meuilleurs coefficients de la
+        // fonction d'evaluation
 		determinerCoeff();
 	}
 	else {
+        // sinon on lance une partie normale
 		Position position;
 		Position positionSuivante;
 		int choix_debut;
