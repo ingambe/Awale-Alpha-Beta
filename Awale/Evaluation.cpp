@@ -437,11 +437,11 @@ int evaluation(Position* courante, int a1, int a2, int a3, int a4, int a5, int a
 	return evalutation;
 }
 
-/**
+
 int basicEvaluation(Position* courante) {
 	return 5 * (courante->pris_ordi.main_joueur - courante->pris_joueur.main_joueur);
 }
-**/
+
 int basicEvaluationMod(Position* courante) {
     return 5 * (courante->pris_joueur.main_joueur - courante->pris_ordi.main_joueur);
 }
