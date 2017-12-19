@@ -1,6 +1,6 @@
 #pragma once
-#define LOG_MAX_CAILLOUX 8
-#define LOG_MAX_CAILLOUX_MAIN 6
+#define LOG_MAX_CAILLOUX 7
+#define LOG_MAX_CAILLOUX_MAIN 7
 #define NB_CASES 10
 #define A1 -100
 #define A2 93
