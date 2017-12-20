@@ -76,15 +76,6 @@ bool positionFinale(Position *courante) {
 			}
 		}
 	}
-	if (somme == 0) {
-		if (courante->ordi_joue) {
-			courante->pris_ordi.main_joueur += nbCaillouxAdverse;
-		}
-		else {
-			courante->pris_joueur.main_joueur += nbCaillouxAdverse;
-		}
-		return true;
-	}
 	return false;
 }
 
@@ -171,6 +162,15 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer) {
 		}
 	}
     suivant->ordi_joue = !courante->ordi_joue;
+    if(positionFinale(suivant)){
+        if(suivant->pris_ordi.main_joueur < NB_CASES || suivant->pris_joueur.main_joueur < NB_CASES){
+            if(suivant->ordi_joue){
+                suivant->pris_joueur.main_joueur += ((2 * NB_CASES) - (suivant->pris_joueur.main_joueur + suivant->pris_ordi.main_joueur));
+            } else {
+                suivant->pris_ordi.main_joueur += ((2 * NB_CASES) - (suivant->pris_joueur.main_joueur + suivant->pris_ordi.main_joueur));
+            }
+        }
+    }
 }
 
 int valeurMinMax(Position *courante, int profondeur, int profondeur_max, int bound_a_b) {
