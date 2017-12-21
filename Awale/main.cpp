@@ -9,6 +9,7 @@
 #include <bitset>
 #include <stdio.h>
 #include <stdlib.h>
+#include <chrono>
 #include "StructureDonnee.hpp"
 #include "Evaluation.hpp"
 #include "FonctionsUtilitaires.hpp"
@@ -62,9 +63,14 @@ int main(int argc, const char * argv[]) {
 		bool ordi_commence = (choix_debut == 0);
 		initGame(&position, ordi_commence);
 		int coup = 0;
+        std::chrono::steady_clock sc;
 		while (!positionFinale(&position)) {
+            auto start = sc.now();
 			if (position.ordi_joue) {
 				coup = prochain_coup(&position, 8);
+                auto end = sc.now();
+                auto time_span = static_cast <std::chrono::duration<double>>(end - start);
+                std::cout << "Temps ecoulee : " << time_span.count() << std::endl;
 				std::cout << "L'ordinateur a joue : " << coup << std::endl;
 			}
 			else {
