@@ -71,9 +71,10 @@ int main(int argc, const char * argv[]) {
 				std::cout << "Coup joueur (de 1 a " << NB_CASES << ") : ";
 				std::cin >> coup;
 			}
-			if (!coupValide(&position, coup)) {
-				std::cout << "le coup : " << coup << " est non valide il a ete jouee par " << (position.ordi_joue ? "l'ordinateur" : "l'adversaire") << std::endl;
-				return 0;
+			while(!coupValide(&position, coup)) {
+                std::cout << "Le coup " << coup << " est non valide, avez vous fait une erreur ?" << std::endl;
+                std::cout << "Coup joueur (de 1 a " << NB_CASES << ") : ";
+                std::cin >> coup;
 			}
 			jouerCoup(&positionSuivante, &position, coup);
 			position = positionSuivante;
