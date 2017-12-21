@@ -46,7 +46,6 @@ bool positionFinale(Position *courante) {
 	bool ordi_joueur1 = courante->ordi_joueur1;
 	//on regarde s'il reste des puits non vide au joueur courant
 	int somme = 0;
-	int nbCaillouxAdverse = 0;
 	if (courante->pris_ordi.main_joueur >= ((4 * NB_CASES) + 1) || courante->pris_joueur.main_joueur >= ((4 * NB_CASES) + 1)) {
 		return true;
 	}
@@ -54,26 +53,38 @@ bool positionFinale(Position *courante) {
 		if (courante->ordi_joue && ordi_joueur1) {
 			for (int i = 0; i < NB_CASES; i++) {
 				somme += courante->cases_jeux[i].case_joueur;
-				nbCaillouxAdverse += courante->cases_jeux[i + NB_CASES].case_joueur;
 			}
+            if(somme == 0){
+                courante->pris_joueur.main_joueur += ((8 * NB_CASES) - (courante->pris_joueur.main_joueur + courante->pris_ordi.main_joueur));
+                return true;
+            }
 		}
 		else if (courante->ordi_joue && !ordi_joueur1) {
 			for (int i = NB_CASES; i < 2 * NB_CASES; i++) {
 				somme += courante->cases_jeux[i].case_joueur;
-				nbCaillouxAdverse += courante->cases_jeux[i - NB_CASES].case_joueur;
 			}
+            if(somme == 0){
+                courante->pris_joueur.main_joueur += ((8 * NB_CASES) - (courante->pris_joueur.main_joueur + courante->pris_ordi.main_joueur));
+                return true;
+            }
 		}
 		else if (!courante->ordi_joue && ordi_joueur1) {
 			for (int i = NB_CASES; i < 2 * NB_CASES; i++) {
 				somme += courante->cases_jeux[i].case_joueur;
-				nbCaillouxAdverse += courante->cases_jeux[i - NB_CASES].case_joueur;
 			}
+            if(somme == 0){
+                courante->pris_ordi.main_joueur += ((8 * NB_CASES) - (courante->pris_joueur.main_joueur + courante->pris_ordi.main_joueur));
+                return true;
+            }
 		}
 		else {
 			for (int i = 0; i < NB_CASES; i++) {
 				somme += courante->cases_jeux[i].case_joueur;
-				nbCaillouxAdverse += courante->cases_jeux[i + NB_CASES].case_joueur;
 			}
+            if(somme == 0){
+                courante->pris_ordi.main_joueur += ((8 * NB_CASES) - (courante->pris_joueur.main_joueur + courante->pris_ordi.main_joueur));
+                return true;
+            }
 		}
 	}
 	return false;
@@ -162,15 +173,6 @@ void jouerCoup(Position* suivant, Position* courante, int case_a_jouer) {
 		}
 	}
     suivant->ordi_joue = !courante->ordi_joue;
-    if(positionFinale(suivant)){
-        if(suivant->pris_ordi.main_joueur < NB_CASES || suivant->pris_joueur.main_joueur < NB_CASES){
-            if(suivant->ordi_joue){
-                suivant->pris_joueur.main_joueur += ((2 * NB_CASES) - (suivant->pris_joueur.main_joueur + suivant->pris_ordi.main_joueur));
-            } else {
-                suivant->pris_ordi.main_joueur += ((2 * NB_CASES) - (suivant->pris_joueur.main_joueur + suivant->pris_ordi.main_joueur));
-            }
-        }
-    }
 }
 
 int valeurMinMax(Position *courante, int profondeur, int profondeur_max, int bound_a_b) {

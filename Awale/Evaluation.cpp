@@ -59,8 +59,6 @@ int nbTrouPeutUtiliser(Position* courante, int* cases_accessible, int nombre_cai
 	return compteur;
 }
 
-
-
 /**
 *  Au lieu d'evaluer juste les scores, on evalue aussi la situation
 *  On regarde si ca cree des occasions pour l'adversaire en lui permettant
