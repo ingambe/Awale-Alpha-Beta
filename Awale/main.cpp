@@ -63,13 +63,25 @@ int main(int argc, const char * argv[]) {
 		bool ordi_commence = (choix_debut == 0);
 		initGame(&position, ordi_commence);
 		int coup = 0;
+        int profondeur = 8;
+        double ecoulee = 1;
         std::chrono::steady_clock sc;
 		while (!positionFinale(&position)) {
             auto start = sc.now();
 			if (position.ordi_joue) {
-				coup = prochain_coup(&position, 8);
+                if(ecoulee < 0.25){
+                    profondeur++;
+                } else if (ecoulee > 1.5){
+                    if(profondeur > 8){
+                        profondeur--;
+                    }
+                } else if(ecoulee > 2){
+                    profondeur = 8;
+                }
+				coup = prochain_coup(&position, profondeur);
                 auto end = sc.now();
                 auto time_span = static_cast <std::chrono::duration<double>>(end - start);
+                ecoulee = time_span.count();
                 std::cout << "Temps ecoulee : " << time_span.count() << std::endl;
 				std::cout << "L'ordinateur a joue : " << coup << std::endl;
 			}
